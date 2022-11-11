@@ -7,20 +7,20 @@ interface IERC20 {
      * Returns the total token supply.
      * 返回总的代币数量
      */
-    function totalSupply() public view returns (uint256);
+    function totalSupply() external view returns (uint256);
 
     /**
      * Returns the account balance of another account with address _owner.
      * 返回某个账户的当前代币余额
      */
-    function balanceOf(address _owner) public view returns (uint256 balance);
+    function balanceOf(address _owner) external view returns (uint256 balance);
 
     /**
      * Transfers _value amount of tokens to address _to, and MUST fire the Transfer event. 
      * The function SHOULD throw if the message caller's account balance does not have enough tokens to spend.
      * 转账函数
      */
-    function transfer(address _to, uint256 _value) public returns (bool success);
+    function transfer(address _to, uint256 _value) external returns (bool success);
 
     /**
      * Transfers _value amount of tokens from address _from to address _to, and MUST fire the Transfer event.
@@ -30,20 +30,20 @@ interface IERC20 {
      * Note Transfers of 0 values MUST be treated as normal transfers and fire the Transfer event.
      * 授权转账
      */
-    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+    function transferFrom(address _from, address _to, uint256 _value) external returns (bool success);
 
     /**
      * Allows _spender to withdraw from your account multiple times, up to the _value amount. 
      * If this function is called again it overwrites the current allowance with _value.
      * 授权
      */
-    function approve(address _spender, uint256 _value) public returns (bool success);
+    function approve(address _spender, uint256 _value) external returns (bool success);
 
     /**
      * Returns the amount which _spender is still allowed to withdraw from _owner.
      * 返回_owner授权给_spender的额度
      */
-    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+    function allowance(address _owner, address _spender) external view returns (uint256 remaining);
 
     /**
      * MUST trigger when tokens are transferred, including zero value transfers.
