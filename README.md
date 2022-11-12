@@ -9,7 +9,7 @@ application of solidity
 
 https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md
 
-代币规范，也就是接口。后续需要根据接口实现具体功能。
+代币规范，也就是接口。后续需要根据接口实现具体功能。接口的方法修改为external修饰符。
 
 ```solidity
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
@@ -21,20 +21,20 @@ interface IERC20 {
      * Returns the total token supply.
      * 返回总的代币数量
      */
-    function totalSupply() public view returns (uint256);
+    function totalSupply() external view returns (uint256);
 
     /**
      * Returns the account balance of another account with address _owner.
      * 返回某个账户的当前代币余额
      */
-    function balanceOf(address _owner) public view returns (uint256 balance);
+    function balanceOf(address _owner) external view returns (uint256 balance);
 
     /**
      * Transfers _value amount of tokens to address _to, and MUST fire the Transfer event. 
      * The function SHOULD throw if the message caller's account balance does not have enough tokens to spend.
      * 转账函数
      */
-    function transfer(address _to, uint256 _value) public returns (bool success);
+    function transfer(address _to, uint256 _value) external returns (bool success);
 
     /**
      * Transfers _value amount of tokens from address _from to address _to, and MUST fire the Transfer event.
@@ -44,20 +44,20 @@ interface IERC20 {
      * Note Transfers of 0 values MUST be treated as normal transfers and fire the Transfer event.
      * 授权转账
      */
-    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+    function transferFrom(address _from, address _to, uint256 _value) external returns (bool success);
 
     /**
      * Allows _spender to withdraw from your account multiple times, up to the _value amount. 
      * If this function is called again it overwrites the current allowance with _value.
      * 授权
      */
-    function approve(address _spender, uint256 _value) public returns (bool success);
+    function approve(address _spender, uint256 _value) external returns (bool success);
 
     /**
      * Returns the amount which _spender is still allowed to withdraw from _owner.
      * 返回_owner授权给_spender的额度
      */
-    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+    function allowance(address _owner, address _spender) external view returns (uint256 remaining);
 
     /**
      * MUST trigger when tokens are transferred, including zero value transfers.
@@ -149,3 +149,67 @@ contract ERC20 is IERC20 {
 }
 ```
 
+![image-20221112111451365](README.assets/image-20221112111451365.png)
+
+## Faucet
+
+实现了一个简易的代币水龙头。用户每隔24h可以获取一次代币。
+
+我们的业务逻辑如下：首先编写代币合约，发布代币。接下来在Faucet水龙头合约中，我们mint一定数量的代币。向外提供一个`acquireFaucet`的方法。EOA账号可以通过该方法每隔24h获取一次代币。
+
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.0;
+import "./IERC20.sol";
+import "./ERC20.sol";
+contract Faucet {
+
+    uint256 public allowedAmount = 100000000000000000000;
+
+    address public tokenAddress;
+
+    uint256 constant ONE_DAY = 86400;
+
+    //记录每个地址领取代币的时间，后面可以设定每隔24h可以领取一次
+    mapping (address => uint) acquiredAddress;
+
+    //每当每个地址领取了一次代币，便触发当前事件
+    event sendToken(address indexed _receiver, uint256 indexed _amount);
+
+    constructor(address _tokenAddress) {
+        tokenAddress = _tokenAddress;
+        ERC20 token = ERC20(tokenAddress);
+        token.mint(100000000000000000000000000);
+
+    }
+
+
+    function acquireFaucet() external {
+        uint number = acquiredAddress[msg.sender];
+        uint nowTime = block.timestamp;
+        IERC20 token = IERC20(tokenAddress);
+        require(token.balanceOf(address(this)) >= allowedAmount, "Faucet empty");
+        if(number != 0){
+            require(nowTime - number >= ONE_DAY, "Please try again after 24 hours from your original request.");
+        }
+        token.transfer(msg.sender, allowedAmount);
+        acquiredAddress[msg.sender] = block.timestamp;
+        emit sendToken(msg.sender, allowedAmount);
+        //number为0，直接领取
+    }
+}
+```
+
+![image-20221112213159364](README.assets/image-20221112213159364.png)
+
+![image-20221112213303430](README.assets/image-20221112213303430.png)
+
+![image-20221112213419601](README.assets/image-20221112213419601.png)
+
+![image-20221112213525087](README.assets/image-20221112213525087.png)
+
+![image-20221112213613549](README.assets/image-20221112213613549.png)
+
+![image-20221112213700196](README.assets/image-20221112213700196.png)
+
+![image-20221112213759012](README.assets/image-20221112213759012.png)

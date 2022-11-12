@@ -61,7 +61,7 @@ contract ERC20 is IERC20 {
     }
 
     function mint(uint amount) public{
-        require(msg.sender == owner, "no permission");
+        //require(msg.sender == owner, "no permission");
         balance[msg.sender] += amount;
         total += amount;
         emit Transfer(address(0), msg.sender, amount);

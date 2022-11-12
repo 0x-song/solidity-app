@@ -1,0 +1,125 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_tokenAddress",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "_receiver",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "_amount",
+						"type": "uint256"
+					}
+				],
+				"name": "sendToken",
+				"type": "event"
+			},
+			{
+				"inputs": [],
+				"name": "acquireFaucet",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "allowedAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "tokenAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"erc20/Faucet.sol": "Faucet"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"erc20/ERC20.sol": {
+			"keccak256": "0x463477661c0ae4b91d46c68a68ed6d890e06888d47d4fec0ba02d9263f930460",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://df6bcc9ced4b00057eeb8198c8d8c8d3e0727c1a8a150894849ce3cfa8c14fba",
+				"dweb:/ipfs/QmXU5dgjekCFJAX7WY1oo8DSQ6kR6QJ9r7h3MWpbZgE7QK"
+			]
+		},
+		"erc20/Faucet.sol": {
+			"keccak256": "0xed3bf90c42af854ec3492b512aebf2d47d8c2b9f292fd0c7ec05bed50dd0bd30",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://0d64700456c87e5fe81b349d54f1384e70007b479e78dcf36ae668bba7fb2e8d",
+				"dweb:/ipfs/QmQcguL8oR2prhUMnkaJSV3nwZpyLaRGzbpEGZNYPt6CK3"
+			]
+		},
+		"erc20/IERC20.sol": {
+			"keccak256": "0x14981c5ddb303214bb150abb5db7cd9c2e8d5cad8b86998c3d9a0599c7562fc3",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://ad837cd978159d5a826191c3cb5615d5e97757d2d5ca28e06ef831511a1eb08f",
+				"dweb:/ipfs/QmVJqEH1b8Gp4KKbq6Njjj5ktv28idJfKqUfqSVkiGro95"
+			]
+		}
+	},
+	"version": 1
+}
