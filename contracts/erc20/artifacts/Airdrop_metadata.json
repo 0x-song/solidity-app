@@ -1,0 +1,81 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_token",
+						"type": "address"
+					},
+					{
+						"internalType": "address[]",
+						"name": "_airdropList",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "_amounts",
+						"type": "uint256[]"
+					}
+				],
+				"name": "airdropTokens",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"airdropTokens(address,address[],uint256[])": {
+					"notice": "_token表示代币合约地址 _airdropList表示需要空投的地址列表 _amounts表示一共需要空投代币的数量"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"Airdrop.sol": "Airdrop"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"Airdrop.sol": {
+			"keccak256": "0xe2dba056cc1e6e3986c2bf26c2b61d4d86457bd52faeb43d85a4a6a684435be9",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://9187e5d031cfbcbdabb9b4691f559140fb1049596d3243eac50c9675481ce5d3",
+				"dweb:/ipfs/QmYFrwRkKUux4Eu1hUt7RGAkxBvCEtdvYRmasE4MSEeDFE"
+			]
+		},
+		"IERC20.sol": {
+			"keccak256": "0x14981c5ddb303214bb150abb5db7cd9c2e8d5cad8b86998c3d9a0599c7562fc3",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://ad837cd978159d5a826191c3cb5615d5e97757d2d5ca28e06ef831511a1eb08f",
+				"dweb:/ipfs/QmVJqEH1b8Gp4KKbq6Njjj5ktv28idJfKqUfqSVkiGro95"
+			]
+		}
+	},
+	"version": 1
+}
