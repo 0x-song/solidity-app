@@ -218,5 +218,96 @@ contract Faucet {
 
 空投。说白了就是白嫖。也是项目方用来进行营销的一种手段。项目方通过智能合约给EOA账号发放指定数量的代币。依然需要用到前面我们编写的ERC20和IERC20这两个合约。
 
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.0;
+import "./IERC20.sol";
+contract Airdrop {
+    
+    /**
+     * _token表示代币合约地址
+     * _airdropList表示需要空投的地址列表
+     * _amounts表示一共需要空投代币的数量
+     */
+    function airdropTokens(address _token, address[] calldata _airdropList, uint256[] calldata _amounts) external{
+        //地址列表和数量列表的长度应该相同
+        require(_airdropList.length  == _amounts.length, "length of address do not equal with amounts");
+        IERC20 token = IERC20(_token);
+        uint amounts = checkSum(_amounts);
+        //require(token.allowance(msg.sender, address(this)) >= amounts, "Approve ERC20 Token");
+        for (uint i = 0; i < _airdropList.length; i++) {
+            token.transferFrom(msg.sender, _airdropList[i], _amounts[i]);
+        }
+    }
 
+    /**
+     * 计算一共需要空投的代币总量
+     */
+    function checkSum(uint256[] calldata _amounts) internal pure returns (uint number){
+        for (uint i = 0; i < _amounts.length; i++) {
+            number += _amounts[i];
+        }
+    }
+}
+```
+
+![image-20221113200936792](README.assets/image-20221113200936792.png)
+
+![image-20221113201113845](README.assets/image-20221113201113845.png)
+
+## ERC721
+
+`BTC`以及`ETH`这类代币可以称之为同质化代币。因为挖出来的每一枚代币和其他代币没有什么不同，是同质化的。但是在实际生活中，很多物品却不是同质化的，比如艺术品等。因此以太坊社区提出了`ERC721`标准，用来抽象非同质化物品。
+
+<a href='https://eips.ethereum.org/all'>EIP</a> 
+
+`EIP`全称 `Ethereum Imporvement Proposals`(以太坊改进建议), 是以太坊开发者社区提出的改进建议。
+
+`ERC`全称 Ethereum Request For Comment (以太坊意见征求稿), 用以记录以太坊上应用级的各种开发标准和协议。如`ERC20(Token Standard)`以及`ERC721(Non-Fungible Token Standard)`。
+
+`EIP`包含`ERC`。
+
+在介绍ERC之前，我们先梳理一下`type`的用法。
+
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.0;
+import "./IERC165.sol";
+contract TypeDemo {
+    
+    //type(整形).max/min可以返回最大/最小值
+    function max() external pure returns (uint){
+        return type(uint).max;
+    }
+
+    function mim() external pure returns (uint){
+        return type(uint).min;
+    }
+
+    //type(Contract):name(合约名称)、creationCode(创建字节码)、runtimeCode(运行字节码)
+    //type(Interface).interfaceId(获取一个接口的interfaceId 如果接口只有一个方法 则为方法的selector，否者为所有方法的selector的异或后结果)
+    //下面使用了三种方式来获取interfaceId，结果均是一致的
+    function typeId() external pure returns (bytes4 a, bytes4 b, bytes4 c){
+        a = type(IERC165).interfaceId;
+        b = bytes4(keccak256('supportsInterface(bytes4)'));
+        c = IERC165.supportsInterface.selector;
+    }
+}
+```
+
+![image-20221113215821399](README.assets/image-20221113215821399.png)
+
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.0;
+interface IERC165 {
+    
+    /**
+     * EIP-165:Standard Interface Detection.检验某个合约有没有实现该接口。如何校验呢？
+     * The interface identifier for this interface is 0x01ffc9a7. You can calculate this by running bytes4(keccak256('supportsInterface(bytes4)'));
+     * or using the Selector contract above.
+     */
+    function supportsInterface(bytes4 interfaceId) external view returns (bool);
+}
+```
 

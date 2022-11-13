@@ -13,7 +13,7 @@ contract Airdrop {
         require(_airdropList.length  == _amounts.length, "length of address do not equal with amounts");
         IERC20 token = IERC20(_token);
         uint amounts = checkSum(_amounts);
-        //require(token.allowance(msg.sender, address(this)) >= amounts, "Approve ERC20 Token");
+        require(token.allowance(msg.sender, address(this)) >= amounts, "Approve ERC20 Token");
         for (uint i = 0; i < _airdropList.length; i++) {
             token.transferFrom(msg.sender, _airdropList[i], _amounts[i]);
         }

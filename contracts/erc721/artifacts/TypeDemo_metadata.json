@@ -1,0 +1,103 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "max",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "mim",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "typeId",
+				"outputs": [
+					{
+						"internalType": "bytes4",
+						"name": "a",
+						"type": "bytes4"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "b",
+						"type": "bytes4"
+					},
+					{
+						"internalType": "bytes4",
+						"name": "c",
+						"type": "bytes4"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"TypeDemo.sol": "TypeDemo"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"IERC165.sol": {
+			"keccak256": "0x4909cb1c06fa2e643c7ade69113f98e2b1f00e808c77a8c31dd20545b8a63262",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://be95fe0fa8ba854ad10d0fd33cd07186a53b9d7df2c92bc342c3f73b84194cba",
+				"dweb:/ipfs/QmbYjoB3avxMHrekwNkHebQHVjCFt6jRxcHVrGCBHP89AN"
+			]
+		},
+		"TypeDemo.sol": {
+			"keccak256": "0x4da7b890b3efd26086b2cb05b8a42e877d5e7721fb741dd5dadb12da12d43f33",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://f67df26fe78a3b72dc178fb90214ff3b352a5c1f39eba5b34a9244fde67feff5",
+				"dweb:/ipfs/QmUNxJbpCu2JLG9vCWn9HTpbLoYXJ3Ah3a7P7TviQf3QQv"
+			]
+		}
+	},
+	"version": 1
+}
