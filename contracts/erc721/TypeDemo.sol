@@ -14,6 +14,6 @@ contract TypeDemo {
     function typeId() external pure returns (bytes4 a, bytes4 b, bytes4 c){
         a = type(IERC165).interfaceId;
         b = bytes4(keccak256('supportsInterface(bytes4)'));
-        c = IERC165.supportsInterface.selector;
+        c = IERC165.selector
     }
 }

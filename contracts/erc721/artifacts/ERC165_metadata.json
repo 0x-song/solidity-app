@@ -1,0 +1,91 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes",
+						"name": "_arr",
+						"type": "bytes"
+					}
+				],
+				"name": "m1",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes4",
+						"name": "_interfaceId",
+						"type": "bytes4"
+					}
+				],
+				"name": "supportsInterface",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"ERC165.sol": "ERC165"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"ERC165.sol": {
+			"keccak256": "0xc2c15bbbae887bec5a90d9d7b5fd9a7c5ea5922434018ab200d3b4abe1d66495",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://4739a10f0f311c8a7642ecc01e90c3f55f758da5a9d94efd023d82dbb86226de",
+				"dweb:/ipfs/QmUeXQtSqAecARGtng1rzVWBAyt4BP6n8np7TWz9qnCANC"
+			]
+		},
+		"IERC165.sol": {
+			"keccak256": "0x4909cb1c06fa2e643c7ade69113f98e2b1f00e808c77a8c31dd20545b8a63262",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://be95fe0fa8ba854ad10d0fd33cd07186a53b9d7df2c92bc342c3f73b84194cba",
+				"dweb:/ipfs/QmbYjoB3avxMHrekwNkHebQHVjCFt6jRxcHVrGCBHP89AN"
+			]
+		}
+	},
+	"version": 1
+}
