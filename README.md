@@ -315,6 +315,38 @@ interface IERC165 {
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.0;
 import "./IERC165.sol";
+contract ERC165 is IERC165{
+
+  /**
+   * 0x01ffc9a7 ===
+   *   bytes4(keccak256('supportsInterface(bytes4)'))
+   */
+    bytes4 private constant ERC165_InterfaceId = 0x01ffc9a7;
+
+    mapping (bytes4 => bool) supportedInterfaces;
+
+    constructor() {
+        registerInterface(ERC165_InterfaceId);
+    }
+
+    function registerInterface(bytes4 _interfaceId) internal{
+        require(_interfaceId != 0xffffffff);
+        supportedInterfaces[_interfaceId] = true;
+    }
+
+    //特别注意：定长数组属于值类型，不属于引用类型，所以参数位置不需要添加memory
+    function supportsInterface(bytes4 _interfaceId) external override view returns (bool){
+        return supportedInterfaces[_interfaceId];
+    }
+}
+```
+
+
+
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.0;
+import "./IERC165.sol";
 /**
  * @title ERC-721 Non-Fungible Token Standard
  * @dev see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
@@ -344,16 +376,16 @@ interface IERC721 is IERC165 {
     /// @notice Count all NFTs assigned to an owner
     /// @dev NFTs assigned to the zero address are considered invalid, and this
     ///  function throws for queries about the zero address.
-    /// @param _owner An address for whom to query the balance
-    /// @return The number of NFTs owned by `_owner`, possibly zero
+    /// @param owner An address for whom to query the balance
+    /// @return balance The number of NFTs owned by `_owner`, possibly zero
     /// 返回某个地址所拥有的所有的NFT数量
     function balanceOf(address owner) external view returns (uint256 balance);
 
     /// @notice Find the owner of an NFT
     /// @dev NFTs assigned to zero address are considered invalid, and queries
     ///  about them do throw.
-    /// @param _tokenId The identifier for an NFT
-    /// @return The address of the owner of the NFT
+    /// @param tokenId The identifier for an NFT
+    /// @return owner The address of the owner of the NFT
     /// 返回某个tokenId所属的主人地址
     function ownerOf(uint256 tokenId) external view returns (address owner);
 
@@ -365,24 +397,24 @@ interface IERC721 is IERC165 {
     ///  checks if `_to` is a smart contract (code size > 0). If so, it calls
     ///  `onERC721Received` on `_to` and throws if the return value is not
     ///  `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`.
-    /// @param _from The current owner of the NFT
-    /// @param _to The new owner
-    /// @param _tokenId The NFT to transfer
+    /// @param from The current owner of the NFT
+    /// @param to The new owner
+    /// @param tokenId The NFT to transfer
     /// @param data Additional data with no specified format, sent in call to `_to`
     /// 安全转账（如果接收方是合约地址，会要求实现ERC721Receiver接口）。参数为转出地址from，接收地址to和tokenId
     function safeTransferFrom(
         address from,
         address to,
         uint256 tokenId,
-        bytes calldata data
+        bytes memory data
     ) external;
 
     /// @notice Transfers the ownership of an NFT from one address to another address
     /// @dev This works identically to the other function with an extra data parameter,
     ///  except this function just sets data to "".
-    /// @param _from The current owner of the NFT
-    /// @param _to The new owner
-    /// @param _tokenId The NFT to transfer
+    /// @param from The current owner of the NFT
+    /// @param to The new owner
+    /// @param tokenId The NFT to transfer
     function safeTransferFrom(
         address from,
         address to,
@@ -396,9 +428,9 @@ interface IERC721 is IERC165 {
     ///  operator, or the approved address for this NFT. Throws if `_from` is
     ///  not the current owner. Throws if `_to` is the zero address. Throws if
     ///  `_tokenId` is not a valid NFT.
-    /// @param _from The current owner of the NFT
-    /// @param _to The new owner
-    /// @param _tokenId The NFT to transfer
+    /// @param from The current owner of the NFT
+    /// @param to The new owner
+    /// @param tokenId The NFT to transfer
     function transferFrom(
         address from,
         address to,
@@ -409,8 +441,8 @@ interface IERC721 is IERC165 {
     /// @dev The zero address indicates there is no approved address.
     ///  Throws unless `msg.sender` is the current NFT owner, or an authorized
     ///  operator of the current owner.
-    /// @param _approved The new approved NFT controller
-    /// @param _tokenId The NFT to approve
+    /// @param to The new approved NFT controller
+    /// @param tokenId The NFT to approve
     /// 授权另一个地址使用你的NFT。参数为被授权地址approve和tokenId
     function approve(address to, uint256 tokenId) external;
 
@@ -418,21 +450,19 @@ interface IERC721 is IERC165 {
     ///  all of `msg.sender`'s assets
     /// @dev Emits the ApprovalForAll event. The contract MUST allow
     ///  multiple operators per owner.
-    /// @param _operator Address to add to the set of authorized operators
+    /// @param operator Address to add to the set of authorized operators
     /// @param _approved True if the operator is approved, false to revoke approval
     /// 将自己持有的该系列NFT批量授权给某个地址operator
     function setApprovalForAll(address operator, bool _approved) external;
 
-    /// @notice Get the approved address for a single NFT
-    /// @dev Throws if `_tokenId` is not a valid NFT.
-    /// @param _tokenId The NFT to find the approved address for
-    /// @return The approved address for this NFT, or the zero address if there is none
+    /// @param tokenId The NFT to find the approved address for
+    /// @return operator The approved address for this NFT, or the zero address if there is none
     /// 查询tokenId被批准给了哪个地址
     function getApproved(uint256 tokenId) external view returns (address operator);
 
     /// @notice Query if an address is an authorized operator for another address
-    /// @param _owner The address that owns the NFTs
-    /// @param _operator The address that acts on behalf of the owner
+    /// @param owner The address that owns the NFTs
+    /// @param operator The address that acts on behalf of the owner
     /// @return True if `_operator` is an approved operator for `_owner`, false otherwise
     /// 查询某地址的NFT是否批量授权给了另一个operator地址
     function isApprovedForAll(address owner, address operator) external view returns (bool);
@@ -473,3 +503,331 @@ interface IERC721Receiver {
 }
 ```
 
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.0;
+import "./ERC165.sol";
+import "./IERC721.sol";
+import "./IERC721Metadata.sol";
+import "./IERC721Receiver.sol";
+import "./Address.sol";
+
+contract ERC721 is ERC165, IERC721 {
+
+    using Address for address;
+
+  // Equals to `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`
+  // which can be also obtained as `IERC721Receiver(0).onERC721Received.selector`
+  bytes4 private constant ERC721_RECEIVED = 0x150b7a02;
+
+/*
+   * 0x80ac58cd ===
+   *   bytes4(keccak256('balanceOf(address)')) ^
+   *   bytes4(keccak256('ownerOf(uint256)')) ^
+   *   bytes4(keccak256('approve(address,uint256)')) ^
+   *   bytes4(keccak256('getApproved(uint256)')) ^
+   *   bytes4(keccak256('setApprovalForAll(address,bool)')) ^
+   *   bytes4(keccak256('isApprovedForAll(address,address)')) ^
+   *   bytes4(keccak256('transferFrom(address,address,uint256)')) ^
+   *   bytes4(keccak256('safeTransferFrom(address,address,uint256)')) ^
+   *   bytes4(keccak256('safeTransferFrom(address,address,uint256,bytes)'))
+   */
+  bytes4 private constant ERC721_InterfaceId = 0x80ac58cd;
+
+    constructor(){
+        registerInterface(ERC721_InterfaceId);
+    }
+    //地址和该地址的NFT数量的映射关系
+    mapping (address => uint) balances;
+    //tokenId和所属地址之间的映射关系
+    mapping (uint => address) owners;
+
+    //某tokenId和授权地址的映射关系(每个token在同一时间只可以授权给一个地址)
+    mapping (uint => address) tokenApprovals;
+    //将owner地址授权给operator的映射关系
+    mapping (address => mapping (address => bool)) operatorApprovals;
+
+    //返回某个地址拥有的NFT的数量
+    function balanceOf(address _owner) external view override returns (uint256 balance){
+        require(_owner != address(0), "black hole address");
+        balance = balances[_owner];
+    }
+
+    //返回某个tokenId所属的地址
+    function ownerOf(uint256 _tokenId) public view override returns (address owner){
+        owner = owners[_tokenId];
+        require(owner != address(0), "token is in the black hole");
+    }
+  /**
+   * @dev Safely transfers the ownership of a given token ID to another address
+   * If the target address is a contract, it must implement `onERC721Received`,
+   * which is called upon a safe transfer, and return the magic value
+   * `bytes4(keccak256("onERC721Received(address,address,uint256,bytes)"))`; otherwise,
+   * the transfer is reverted.
+   * Requires the msg sender to be the owner, approved, or operator
+   * @param _from current owner of the token
+   * @param _to address to receive the ownership of the given token ID
+   * @param _tokenId uint256 ID of the token to be transferred
+   * @param _data bytes data to send along with a safe transfer check
+   * 安全的转账，为了保证接收地址如果是合约，如果没有实现onERC721Received会出错
+   */
+    function safeTransferFrom(address _from,address _to,uint256 _tokenId,bytes memory _data) public override{
+        transferFrom(_from, _to, _tokenId);
+        require(_checkERC721Received(_from, _to, _tokenId, _data));
+    }
+
+    //如果是合约，则必须实现该接口，否则NFT发送到该合约便消失了
+    function _checkERC721Received(address _from,address _to,uint256 _tokenId,bytes memory _data)internal returns (bool){
+        if(!_to.isContract()){
+            return true;
+        }
+        bytes4 code = IERC721Receiver(_to).onERC721Received(msg.sender, _from, _tokenId, _data);
+        return code == ERC721_RECEIVED;
+    }
+
+ 
+    function safeTransferFrom(address _from,address _to,uint256 _tokenId) external override{
+        safeTransferFrom(_from, _to, _tokenId, "");
+    }
+
+  /**
+   * @dev Transfers the ownership of a given token ID to another address
+   * Usage of this method is discouraged, use `safeTransferFrom` whenever possible
+   * Requires the msg sender to be the owner, approved, or operator
+   * @param _from current owner of the token
+   * @param _to address to receive the ownership of the given token ID
+   * @param _tokenId uint256 ID of the token to be transferred
+  */
+    function transferFrom(address _from, address _to, uint256 _tokenId) public override{
+        require(_isApprovedOrOwner(msg.sender, _tokenId));
+        require(_to != address(0));
+        //清除授权
+        _clearApproval(_from, _tokenId);
+        _removeTokenFrom(_from, _tokenId);
+        _addTokenTo(_to, _tokenId);
+        emit Transfer(_from, _to, _tokenId);
+    }
+
+    function _addTokenTo(address _to, uint _tokenId)internal {
+        require(owners[_tokenId] == address(0));
+        balances[_to] += 1;
+        owners[_tokenId] = _to;
+    }
+
+    function _removeTokenFrom(address _from, uint _tokenId)internal {
+        require(ownerOf(_tokenId) == _from);
+        balances[_from] -= 1;
+        owners[_tokenId] = address(0);
+    }
+
+    //清除授权信息
+    function _clearApproval(address _owner, uint _tokenId) internal {
+        require(ownerOf(_tokenId) == _owner);
+        tokenApprovals[_tokenId] = address(0);
+    }
+
+    //是否是授权地址或者是拥有者
+    function _isApprovedOrOwner(address _caller, uint _tokenId) internal view returns (bool){
+        address owner = ownerOf(_tokenId);
+        //三种情况：1.拥有者 2.当前tokenId授权给了该地址 3.将当前地址下的所有NFT全部授权给了该地址
+        return (_caller == owner || getApproved(_tokenId) == _caller || isApprovedForAll(owner, _caller));
+    }
+
+
+
+    /**
+   * @dev Approves another address to transfer the given token ID
+   * The zero address indicates there is no approved address.
+   * There can only be one approved address per token at a given time.
+   * Can only be called by the token owner or an approved operator.
+   * @param _to address to be approved for the given token ID
+   * @param _tokenId uint256 ID of the token to be approved
+   * 将tokenId授权给to地址；
+   */
+    function approve(address _to, uint256 _tokenId) external override{
+        //获取当前tokenId的拥有者
+        address owner = ownerOf(_tokenId);
+        //不要自己给自己发送
+        require(owner != _to);
+        //仅当前tokenId拥有者或者授权的合约地址可以调用该方法;isApprovedForAll查询owner地址的NFT是否批量授权给msg.sender调用者
+        require(msg.sender == owner || isApprovedForAll(owner, msg.sender));
+        //将_tokenId授权给_to地址
+        tokenApprovals[_tokenId] = _to;
+        emit Approval(owner, _to, _tokenId);
+    }
+
+  /**
+   * @dev Sets or unsets the approval of a given operator
+   * An operator is allowed to transfer all tokens of the sender on their behalf
+   * @param _operator operator address to set the approval
+   * @param _approved representing the status of the approval to be set
+   * 将全部代币授权给operator地址或者撤销授权
+   */
+    function setApprovalForAll(address _operator, bool _approved) external override{
+        require(_operator != msg.sender);
+        operatorApprovals[msg.sender][_operator] = _approved;
+        emit ApprovalForAll(msg.sender, _operator, _approved);
+    }
+
+  /**
+   * @dev Gets the approved address for a token ID, or zero if no address set
+   * Reverts if the token ID does not exist.
+   * @param _tokenId uint256 ID of the token to query the approval of
+   * @return operator currently approved for the given token ID
+   * 查询当前tokenId的授权地址
+   */
+    function getApproved(uint256 _tokenId) public override view returns (address operator){
+        require(_exists(_tokenId));
+        operator = tokenApprovals[_tokenId];
+    }
+
+    /**
+   * @dev Returns whether the specified token exists
+   * @param _tokenId uint256 ID of the token to query the existence of
+   * @return whether the token exists
+   */
+  function _exists(uint256 _tokenId) internal view returns (bool) {
+    address owner = owners[_tokenId];
+    return owner != address(0);
+  }
+
+  /**
+   * @dev Tells whether an operator is approved by a given owner
+   * @param _owner owner address which you want to query the approval of
+   * @param _operator operator address which you want to query the approval of
+   * @return bool whether the given operator is approved by the given owner
+   */
+    function isApprovedForAll(address _owner, address _operator) public override view returns (bool){
+        return operatorApprovals[_owner][_operator];
+    }
+
+    /**
+   * @dev Internal function to mint a new token
+   * Reverts if the given token ID already exists
+   * @param _to The address that will own the minted token
+   * @param _tokenId uint256 ID of the token to be minted by the msg.sender
+   */
+  function _mint(address _to, uint256 _tokenId) internal {
+    require(_to != address(0));
+    _addTokenTo(_to, _tokenId);
+    emit Transfer(address(0), _to, _tokenId);
+  }
+
+  /**
+   * @dev Internal function to burn a specific token
+   * Reverts if the token does not exist
+   * @param _tokenId uint256 ID of the token being burned by the msg.sender
+   */
+  function _burn(uint256 _tokenId) internal {
+    address owner = ownerOf(_tokenId);
+    require(msg.sender == owner, "you can not burn someone else's token");
+    _clearApproval(owner, _tokenId);
+    _removeTokenFrom(owner, _tokenId);
+    emit Transfer(owner, address(0), _tokenId);
+  }
+}
+```
+
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.0;
+import "./IERC721.sol";
+/**
+ * @title ERC-721 Non-Fungible Token Standard, optional metadata extension
+ * @dev See https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
+ */
+interface IERC721Metadata is IERC721 {
+    
+    //返回代币名称
+    function name() external view returns (string memory);
+
+    //返回代币代号
+    function symbol() external view returns (string memory);
+
+    //通过tokenId查询链接url
+    function tokenURI(uint256 tokenId) external view returns (string memory);
+}
+```
+
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.0;
+import "./ERC165.sol";
+import "./ERC721.sol";
+import "./IERC721Metadata.sol";
+import "./Strings.sol";
+
+contract ERC721Metadata is ERC165, ERC721, IERC721Metadata{
+
+    string internal tokenName;
+
+    string internal tokenSymbol;
+
+    using Strings for uint256;
+
+  /**
+   * 0x5b5e139f ===
+   *   bytes4(keccak256('name()')) ^
+   *   bytes4(keccak256('symbol()')) ^
+   *   bytes4(keccak256('tokenURI(uint256)'))
+   */
+    bytes4 private constant ERC721Metadata_InterfaceId = 0x5b5e139f;
+
+    constructor(string memory _name, string memory _symbol) {
+        tokenName = _name;
+        tokenSymbol = _symbol;
+        registerInterface(ERC721Metadata_InterfaceId);
+    }
+
+    function name() external override view returns (string memory){
+        return tokenName;
+    }
+
+    function symbol() external override view returns (string memory){
+        return tokenSymbol;
+    }
+
+    function tokenURI(uint256 tokenId) external override view returns (string memory){
+        require(_exists(tokenId));
+        string memory baseURI = _baseURI();
+        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenId.toString())) : "";
+    }
+
+    //定义一个方法，发行ERC721代币，需要继承当前合约，并且实现该方法
+    function _baseURI() internal view virtual returns (string memory){
+        return "";
+    }
+}
+```
+
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.0;
+import "./ERC721Metadata.sol";
+import "./SafeMath.sol";
+
+contract Road2Web3 is ERC721Metadata{
+
+    uint public MAX_SUPPLY = 1000;
+
+    using SafeMath for uint256;
+
+    uint private index = 1;
+
+    constructor(string memory _name, string memory _symbol) ERC721Metadata(_name, _symbol) {
+        
+    }
+
+    //设置ipfs
+     function _baseURI() internal pure override returns (string memory){
+        return "ipfs://QmeDEvsWpBk429UJj9JTrgtHZpNJksvPVK4GfQv439UpXW/";
+    }
+
+    function mint() external{
+        require(index <= MAX_SUPPLY, "All items have been minted");
+        _mint(msg.sender, index);
+    }
+}
+```
+
+除此之外还需要一些工具类，就不展示了。

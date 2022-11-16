@@ -4,7 +4,7 @@ import "./ERC165.sol";
 import "./IERC721.sol";
 import "./IERC721Metadata.sol";
 import "./IERC721Receiver.sol";
-import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Address.sol";
+import "./Address.sol";
 
 contract ERC721 is ERC165, IERC721 {
 
@@ -44,11 +44,11 @@ contract ERC721 is ERC165, IERC721 {
     //返回某个地址拥有的NFT的数量
     function balanceOf(address _owner) external view override returns (uint256 balance){
         require(_owner != address(0), "black hole address");
-        balance = _balances[_owner];
+        balance = balances[_owner];
     }
 
     //返回某个tokenId所属的地址
-    function ownerOf(uint256 _tokenId) external view override returns (address owner){
+    function ownerOf(uint256 _tokenId) public view override returns (address owner){
         owner = owners[_tokenId];
         require(owner != address(0), "token is in the black hole");
     }
@@ -65,13 +65,13 @@ contract ERC721 is ERC165, IERC721 {
    * @param _data bytes data to send along with a safe transfer check
    * 安全的转账，为了保证接收地址如果是合约，如果没有实现onERC721Received会出错
    */
-    function safeTransferFrom(address _from,address _to,uint256 _tokenId,bytes calldata _data) external override{
+    function safeTransferFrom(address _from,address _to,uint256 _tokenId,bytes memory _data) public override{
         transferFrom(_from, _to, _tokenId);
         require(_checkERC721Received(_from, _to, _tokenId, _data));
     }
 
     //如果是合约，则必须实现该接口，否则NFT发送到该合约便消失了
-    function _checkERC721Received(address _from,address _to,uint256 _tokenId,bytes calldata _data)internal returns (bool){
+    function _checkERC721Received(address _from,address _to,uint256 _tokenId,bytes memory _data)internal returns (bool){
         if(!_to.isContract()){
             return true;
         }
@@ -92,7 +92,7 @@ contract ERC721 is ERC165, IERC721 {
    * @param _to address to receive the ownership of the given token ID
    * @param _tokenId uint256 ID of the token to be transferred
   */
-    function transferFrom(address _from, address _to, uint256 _tokenId) external override{
+    function transferFrom(address _from, address _to, uint256 _tokenId) public override{
         require(_isApprovedOrOwner(msg.sender, _tokenId));
         require(_to != address(0));
         //清除授权
@@ -103,7 +103,7 @@ contract ERC721 is ERC165, IERC721 {
     }
 
     function _addTokenTo(address _to, uint _tokenId)internal {
-        require(owners[_tokenId] = address(0));
+        require(owners[_tokenId] == address(0));
         balances[_to] += 1;
         owners[_tokenId] = _to;
     }
@@ -170,7 +170,7 @@ contract ERC721 is ERC165, IERC721 {
    * @return operator currently approved for the given token ID
    * 查询当前tokenId的授权地址
    */
-    function getApproved(uint256 _tokenId) external override view returns (address operator){
+    function getApproved(uint256 _tokenId) public override view returns (address operator){
         require(_exists(_tokenId));
         operator = tokenApprovals[_tokenId];
     }
@@ -181,7 +181,7 @@ contract ERC721 is ERC165, IERC721 {
    * @return whether the token exists
    */
   function _exists(uint256 _tokenId) internal view returns (bool) {
-    address owner = owners[tokenId];
+    address owner = owners[_tokenId];
     return owner != address(0);
   }
 
@@ -191,7 +191,7 @@ contract ERC721 is ERC165, IERC721 {
    * @param _operator operator address which you want to query the approval of
    * @return bool whether the given operator is approved by the given owner
    */
-    function isApprovedForAll(address _owner, address _operator) external override view returns (bool){
+    function isApprovedForAll(address _owner, address _operator) public override view returns (bool){
         return operatorApprovals[_owner][_operator];
     }
 
@@ -210,13 +210,13 @@ contract ERC721 is ERC165, IERC721 {
   /**
    * @dev Internal function to burn a specific token
    * Reverts if the token does not exist
-   * @param tokenId uint256 ID of the token being burned by the msg.sender
+   * @param _tokenId uint256 ID of the token being burned by the msg.sender
    */
   function _burn(uint256 _tokenId) internal {
     address owner = ownerOf(_tokenId);
-    require(msg.sender == owner, "you can not burn someone else's token")
-    _clearApproval(owner, tokenId);
-    _removeTokenFrom(owner, tokenId);
-    emit Transfer(owner, address(0), tokenId);
+    require(msg.sender == owner, "you can not burn someone else's token");
+    _clearApproval(owner, _tokenId);
+    _removeTokenFrom(owner, _tokenId);
+    emit Transfer(owner, address(0), _tokenId);
   }
 }
