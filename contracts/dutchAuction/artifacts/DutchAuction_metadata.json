@@ -105,6 +105,88 @@
 				"type": "event"
 			},
 			{
+				"stateMutability": "payable",
+				"type": "fallback"
+			},
+			{
+				"inputs": [],
+				"name": "AUCTION_DECLINE_INTERVAL",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "AUCTION_DECLINE_RATE",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "AUCTION_DURATION_TIME",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "AUCTION_FLOOR_PRICE",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "AUCTION_START_PRICE",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "COLLECTION_SIZE",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -120,6 +202,32 @@
 				"name": "approve",
 				"outputs": [],
 				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "number",
+						"type": "uint256"
+					}
+				],
+				"name": "auctionAndMint",
+				"outputs": [],
+				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "auctionStartTime",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -155,6 +263,19 @@
 						"internalType": "address",
 						"name": "operator",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getAuctionPrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -308,6 +429,19 @@
 			{
 				"inputs": [
 					{
+						"internalType": "uint256",
+						"name": "_timestamp",
+						"type": "uint256"
+					}
+				],
+				"name": "setAuctionStartTime",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
 						"internalType": "bytes4",
 						"name": "_interfaceId",
 						"type": "bytes4"
@@ -357,6 +491,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "totalSupply",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -391,6 +538,17 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "withdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
 			}
 		],
 		"devdoc": {
@@ -460,7 +618,11 @@
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {},
+			"methods": {
+				"getAuctionPrice()": {
+					"notice": "block.timestamp < auctionTime,还未开始拍卖-----开始价格 block.timestamp - auctionTime > duration_time, 拍卖已经结束-----地板价"
+				}
+			},
 			"version": 1
 		}
 	},
@@ -497,11 +659,11 @@
 			]
 		},
 		"dutchAuction/DutchAuction.sol": {
-			"keccak256": "0xbd296c1d6f88ac87e828b4ea65c34c105995baa354d671c6e7c71e30a089d08a",
+			"keccak256": "0xc89ae95ae1863391e5c75ca74e0326849962767ba3593715e0828bef43a6f38b",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
-				"bzz-raw://78744692b2dea3032eca4467ed8490f127473cf94e5f74e4d8a8e10eccd9b5e3",
-				"dweb:/ipfs/QmVi9ozoxGVw7gf5NBLttEqAAGBEkv82Vkxx3XEHrnWwTk"
+				"bzz-raw://7d09334c511c7f09df95bfafd94bd3f9180cc4c910707e1152eba0911646f121",
+				"dweb:/ipfs/QmeteGXZZmqJ5L4xrFEKgw8epfR7GEFiwvGoG6vD7VPXGZ"
 			]
 		},
 		"erc721/Address.sol": {
