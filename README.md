@@ -930,3 +930,11 @@ contract DutchAuction is Ownable, ERC721Metadata("Dutch Auction", "R2W3 Auction"
 }
 ```
 
+## 英式拍卖
+
+英式拍卖就是我们平时经常见到的拍卖形式。在拍卖期间，最高价者竞拍得到标的物品。英式拍卖通常对某单个标的物品进行拍卖。比如NFT发售等场景，一般不会采取这种方式。但是比如`1`编号的某个NFT可能会进行拍卖。那么便可以使用这种方式。
+
+![image-20221119120455203](README.assets/image-20221119120455203.png)
+
+
+
