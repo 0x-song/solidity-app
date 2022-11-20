@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.0;
-import "../erc721/ERC721Metadata.sol";
+import "../erc721/Road2Web3.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DutchAuction is Ownable, ERC721Metadata("Dutch Auction", "R2W3 Auction") {
+contract DutchAuction is Ownable{
     //NFT总数量
     uint256 public constant COLLECTION_SIZE = 1000;
     //竞拍开始价格
@@ -21,10 +21,11 @@ contract DutchAuction is Ownable, ERC721Metadata("Dutch Auction", "R2W3 Auction"
 
     uint256 private baseTokenURI;
 
-    uint256[] private allTokens;
+    Road2Web3 private nftAddress;
 
-    constructor(){
+    constructor(address _nftAddress){
         auctionStartTime = block.timestamp;
+        nftAddress = Road2Web3(_nftAddress);
     }
 
     //项目方开始拍卖前需要调用该方法
@@ -47,25 +48,18 @@ contract DutchAuction is Ownable, ERC721Metadata("Dutch Auction", "R2W3 Auction"
             return AUCTION_START_PRICE - (AUCTION_DECLINE_RATE * numberOfDecline);
         }
     }
-    //目前已经mint出来的token数量
-    function totalSupply() public view returns (uint){
-        return allTokens.length;
-    }
-
-    function _addTokenIndex(uint tokenId) private{
-        allTokens.push(tokenId);
-    }
+    
 
     function auctionAndMint(uint number)external payable{
         //建立局部变量，减少gas费
         uint _startTime = auctionStartTime;
         require(_startTime != 0 && block.timestamp >= _startTime, "Sale have not been started");
-        require(totalSupply() + number <= COLLECTION_SIZE, "All items have benn minted");
+        require(nftAddress.totalSupply() + number <= COLLECTION_SIZE, "All items have benn minted");
         uint totalCost = getAuctionPrice() * number;
         require(msg.value >= totalCost, "Not enough ETH to mint");
         payable(msg.sender).transfer(msg.value - totalCost);
         for (uint i = 0; i < number; i++) {
-            uint mintIndex = totalSupply();
+            uint mintIndex = nftAddress.totalSupply() + 2;
             _mint(msg.sender, mintIndex);
             _addTokenIndex(mintIndex);
         }

@@ -7,10 +7,6 @@ contract Road2Web3 is ERC721Metadata{
 
     uint public MAX_SUPPLY = 1000;
 
-    using SafeMath for uint256;
-
-    uint private index = 1;
-
     constructor(string memory _name, string memory _symbol) ERC721Metadata(_name, _symbol) {
         
     }
@@ -20,7 +16,7 @@ contract Road2Web3 is ERC721Metadata{
         return "ipfs://QmeDEvsWpBk429UJj9JTrgtHZpNJksvPVK4GfQv439UpXW/";
     }
 
-    function mint() external{
+    function mint(uint index) external{
         require(index <= MAX_SUPPLY, "All items have been minted");
         _mint(msg.sender, index);
     }

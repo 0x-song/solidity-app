@@ -360,7 +360,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"ERC721.sol": "ERC721"
+			"erc721/ERC721.sol": "ERC721"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -374,7 +374,15 @@
 		"remappings": []
 	},
 	"sources": {
-		"ERC165.sol": {
+		"erc721/Address.sol": {
+			"keccak256": "0xab08f9737857b7206a4fdeab0cb300337abb8c26d8ac0a04af90cf93e23f9007",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://e313fb4ca5132b7f9efa9743496bf47b599c59c89bb5b32f0fb7a49b8fc5b5fc",
+				"dweb:/ipfs/QmSomRQMrzdQKhhk8cvrDsVevyqWs5BbyyGgHapmkCe9yF"
+			]
+		},
+		"erc721/ERC165.sol": {
 			"keccak256": "0xa0a1875bebb50fcd3e87b8fbb523f7144667c69ee9e229100917d83b7c5c1f66",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
@@ -382,15 +390,15 @@
 				"dweb:/ipfs/QmSugrG775rsfH9otwZ22gV4D4SakPA6fNszqdW5EDHamN"
 			]
 		},
-		"ERC721.sol": {
-			"keccak256": "0x0b93557191e8cff624e84aba864077a2d02ec25189aa1ca444060a6628fff7e4",
+		"erc721/ERC721.sol": {
+			"keccak256": "0x0074c8265091ec4144dc3f956bf9968f40c984d0d6a8f33fafdb96917bb4881b",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
-				"bzz-raw://456bb7bfecf9a3879db9d63c23304ea636a61a70c8889b347a306019a82ce2dd",
-				"dweb:/ipfs/QmXR4Z65bCKdA84FQJ7Xs6eB9H8ggTywk41S9NDTuAz2Mh"
+				"bzz-raw://3ba8c27f83e2e3fe51dfcd65be16b64ef5654dfd036dea766f1c57695426a45a",
+				"dweb:/ipfs/QmNbb8HNbMvLJzWjvbTx6RF3VvMjH3HMN734WAP79pTn1k"
 			]
 		},
-		"IERC165.sol": {
+		"erc721/IERC165.sol": {
 			"keccak256": "0x4909cb1c06fa2e643c7ade69113f98e2b1f00e808c77a8c31dd20545b8a63262",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
@@ -398,7 +406,7 @@
 				"dweb:/ipfs/QmbYjoB3avxMHrekwNkHebQHVjCFt6jRxcHVrGCBHP89AN"
 			]
 		},
-		"IERC721.sol": {
+		"erc721/IERC721.sol": {
 			"keccak256": "0x4d0db440a26df4243b2564c0fa84997f66ae42ac7d30130cf99ef7a5f5db37ff",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
@@ -406,7 +414,7 @@
 				"dweb:/ipfs/QmVRa2hR4f2fdxLCZWJ5KnU7JgLdYrdVTw2XDZYRdq6Rb4"
 			]
 		},
-		"IERC721Metadata.sol": {
+		"erc721/IERC721Metadata.sol": {
 			"keccak256": "0x656407a4a23d16ea9307d29452d49a8fca9bfb0ea5c34f0c6e082b192b4d14a1",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
@@ -414,20 +422,12 @@
 				"dweb:/ipfs/QmZqibbWjVs8JJmLis6TBtjKSBshqPVrv41EmQMbzdKbmw"
 			]
 		},
-		"IERC721Receiver.sol": {
+		"erc721/IERC721Receiver.sol": {
 			"keccak256": "0x96cc4fb28ddd7e988fbe280bdc84612d999bea6f1bfa83598e803ebbd612fa53",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
 				"bzz-raw://ab8981eaa68b5af0e30051d1677fff71f41955b17750dd7d81ae177a04e15fcf",
 				"dweb:/ipfs/QmP28mWXKj8XjZwcF22PjMsUyjd8wHTbekwuGyFscGfTsE"
-			]
-		},
-		"https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Address.sol": {
-			"keccak256": "0x68404b57d114b893554b0e54334b32f578f5d1abf61830025c83fb71dc1944ce",
-			"license": "MIT",
-			"urls": [
-				"bzz-raw://d3d0a94b3c8afd92c2a9f03f3325e9ac22cec56e995b94ff212670ff3653f0d3",
-				"dweb:/ipfs/QmPqKWUysbo8QqKcqH5Lp7SQiL1LfjeoGCSa7iFWmAP8Mw"
 			]
 		}
 	},

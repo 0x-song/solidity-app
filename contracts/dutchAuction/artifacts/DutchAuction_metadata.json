@@ -659,11 +659,11 @@
 			]
 		},
 		"dutchAuction/DutchAuction.sol": {
-			"keccak256": "0xc89ae95ae1863391e5c75ca74e0326849962767ba3593715e0828bef43a6f38b",
+			"keccak256": "0x5013e762fbb731498773ee73886c6edb5b722e56546363dfc906f066781194cf",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
-				"bzz-raw://7d09334c511c7f09df95bfafd94bd3f9180cc4c910707e1152eba0911646f121",
-				"dweb:/ipfs/QmeteGXZZmqJ5L4xrFEKgw8epfR7GEFiwvGoG6vD7VPXGZ"
+				"bzz-raw://edb032276a2f73b5c4c06cf717b3f1982293b9e5c117eb2728aba32cece0a63d",
+				"dweb:/ipfs/QmPBJ7ArfV59ZF5t2o2DbThCAutTeXv95518f3aTrjMHu2"
 			]
 		},
 		"erc721/Address.sol": {

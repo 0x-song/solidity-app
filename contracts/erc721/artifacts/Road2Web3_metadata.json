@@ -349,6 +349,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "totalSupply",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -436,7 +449,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"Road2Web3.sol": "Road2Web3"
+			"erc721/Road2Web3.sol": "Road2Web3"
 		},
 		"evmVersion": "london",
 		"libraries": {},
@@ -450,7 +463,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"Address.sol": {
+		"erc721/Address.sol": {
 			"keccak256": "0xab08f9737857b7206a4fdeab0cb300337abb8c26d8ac0a04af90cf93e23f9007",
 			"license": "MIT",
 			"urls": [
@@ -458,7 +471,7 @@
 				"dweb:/ipfs/QmSomRQMrzdQKhhk8cvrDsVevyqWs5BbyyGgHapmkCe9yF"
 			]
 		},
-		"ERC165.sol": {
+		"erc721/ERC165.sol": {
 			"keccak256": "0xa0a1875bebb50fcd3e87b8fbb523f7144667c69ee9e229100917d83b7c5c1f66",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
@@ -466,7 +479,7 @@
 				"dweb:/ipfs/QmSugrG775rsfH9otwZ22gV4D4SakPA6fNszqdW5EDHamN"
 			]
 		},
-		"ERC721.sol": {
+		"erc721/ERC721.sol": {
 			"keccak256": "0x0074c8265091ec4144dc3f956bf9968f40c984d0d6a8f33fafdb96917bb4881b",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
@@ -474,15 +487,15 @@
 				"dweb:/ipfs/QmNbb8HNbMvLJzWjvbTx6RF3VvMjH3HMN734WAP79pTn1k"
 			]
 		},
-		"ERC721Metadata.sol": {
-			"keccak256": "0xfd045db18f32a7ab010068aa370544439360ae6007cc14a55b9e9be33504aedd",
+		"erc721/ERC721Metadata.sol": {
+			"keccak256": "0xf880a379e19659120824faa5160ed0d9d2d09ffee4f7ccb74ae3c5a649b591ca",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
-				"bzz-raw://89d15c209659eeebc540e194a49250d69a51f224405b9c2abc2cce349c6103c2",
-				"dweb:/ipfs/QmNwLuYpm6fVUmujTGgjeSHowa2KMudaRSTB8cvLyS97GP"
+				"bzz-raw://a68beed7bf4c2e626eb79245947170169ae587c7cc7f21abfff021f0a8f2a3c1",
+				"dweb:/ipfs/QmP2rXFw4Xpue7W8ockdXDKyxzdBqPZu26MpN6B53CoUpa"
 			]
 		},
-		"IERC165.sol": {
+		"erc721/IERC165.sol": {
 			"keccak256": "0x4909cb1c06fa2e643c7ade69113f98e2b1f00e808c77a8c31dd20545b8a63262",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
@@ -490,7 +503,7 @@
 				"dweb:/ipfs/QmbYjoB3avxMHrekwNkHebQHVjCFt6jRxcHVrGCBHP89AN"
 			]
 		},
-		"IERC721.sol": {
+		"erc721/IERC721.sol": {
 			"keccak256": "0x4d0db440a26df4243b2564c0fa84997f66ae42ac7d30130cf99ef7a5f5db37ff",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
@@ -498,7 +511,7 @@
 				"dweb:/ipfs/QmVRa2hR4f2fdxLCZWJ5KnU7JgLdYrdVTw2XDZYRdq6Rb4"
 			]
 		},
-		"IERC721Metadata.sol": {
+		"erc721/IERC721Metadata.sol": {
 			"keccak256": "0x656407a4a23d16ea9307d29452d49a8fca9bfb0ea5c34f0c6e082b192b4d14a1",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
@@ -506,7 +519,7 @@
 				"dweb:/ipfs/QmZqibbWjVs8JJmLis6TBtjKSBshqPVrv41EmQMbzdKbmw"
 			]
 		},
-		"IERC721Receiver.sol": {
+		"erc721/IERC721Receiver.sol": {
 			"keccak256": "0x96cc4fb28ddd7e988fbe280bdc84612d999bea6f1bfa83598e803ebbd612fa53",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
@@ -514,7 +527,7 @@
 				"dweb:/ipfs/QmP28mWXKj8XjZwcF22PjMsUyjd8wHTbekwuGyFscGfTsE"
 			]
 		},
-		"Math.sol": {
+		"erc721/Math.sol": {
 			"keccak256": "0x354871528bf99e5a891d86a051597da655434520520458d137d9ae9b2463429b",
 			"license": "MIT",
 			"urls": [
@@ -522,7 +535,7 @@
 				"dweb:/ipfs/Qmc5ztNcZxKPicNy23rYufo7Vd3yAL5AQUNkRU8E8s2nTu"
 			]
 		},
-		"Road2Web3.sol": {
+		"erc721/Road2Web3.sol": {
 			"keccak256": "0x65712982358e612a15315193d1a7458e83eb2e1e1802f5809b79f84f262d431c",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
@@ -530,7 +543,7 @@
 				"dweb:/ipfs/QmYaANWMXYnXEBVgU5RXt37XxPftGbXyi6YTx1KHiDgYge"
 			]
 		},
-		"SafeMath.sol": {
+		"erc721/SafeMath.sol": {
 			"keccak256": "0x7b8e55374e9531825f0574ae875a237f1b216dcfcdd44db1089b0cb8ae487386",
 			"license": "MIT",
 			"urls": [
@@ -538,7 +551,7 @@
 				"dweb:/ipfs/QmS14B7UL9QKGcofpawaeaXYpqmcVdshxpNiegFWBMHTWH"
 			]
 		},
-		"Strings.sol": {
+		"erc721/Strings.sol": {
 			"keccak256": "0xca15e0b3c2c6fc83beac0d1be1765e0285f23cc5d587d363340e1d20f079a91b",
 			"license": "MIT",
 			"urls": [

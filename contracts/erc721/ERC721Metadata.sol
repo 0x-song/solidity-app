@@ -13,6 +13,17 @@ contract ERC721Metadata is ERC165, ERC721, IERC721Metadata{
 
     using Strings for uint256;
 
+    uint256[] internal allTokens;
+
+    //目前已经mint出来的token数量
+    function totalSupply() public view returns (uint){
+        return allTokens.length;
+    }
+
+    function _addTokenIndex(uint tokenId) internal{
+        allTokens.push(tokenId);
+    }
+
   /**
    * 0x5b5e139f ===
    *   bytes4(keccak256('name()')) ^
