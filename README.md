@@ -841,10 +841,10 @@ contract Road2Web3 is ERC721Metadata{
 ```solidity
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity ^0.8.0;
-import "../erc721/ERC721Metadata.sol";
+import "../erc721/Road2Web3.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DutchAuction is Ownable, ERC721Metadata("Dutch Auction", "R2W3 Auction") {
+contract DutchAuction is Ownable, Road2Web3("Road2Web3", "r2w3"){
     //NFT总数量
     uint256 public constant COLLECTION_SIZE = 1000;
     //竞拍开始价格
@@ -862,10 +862,15 @@ contract DutchAuction is Ownable, ERC721Metadata("Dutch Auction", "R2W3 Auction"
 
     uint256 private baseTokenURI;
 
-    uint256[] private allTokens;
-
     constructor(){
         auctionStartTime = block.timestamp;
+    }
+
+    //只有合约的部署者才可以mint No.1号NFT，后续要进行拍卖
+    function mintGenesisNFT() external onlyOwner {
+        uint mintIndex = totalSupply() + 1;
+        _mint(msg.sender, mintIndex);
+        _addTokenIndex(mintIndex);
     }
 
     //项目方开始拍卖前需要调用该方法
@@ -888,14 +893,7 @@ contract DutchAuction is Ownable, ERC721Metadata("Dutch Auction", "R2W3 Auction"
             return AUCTION_START_PRICE - (AUCTION_DECLINE_RATE * numberOfDecline);
         }
     }
-    //目前已经mint出来的token数量
-    function totalSupply() public view returns (uint){
-        return allTokens.length;
-    }
-
-    function _addTokenIndex(uint tokenId) private{
-        allTokens.push(tokenId);
-    }
+    
 
     function auctionAndMint(uint number)external payable{
         //建立局部变量，减少gas费
@@ -906,7 +904,7 @@ contract DutchAuction is Ownable, ERC721Metadata("Dutch Auction", "R2W3 Auction"
         require(msg.value >= totalCost, "Not enough ETH to mint");
         payable(msg.sender).transfer(msg.value - totalCost);
         for (uint i = 0; i < number; i++) {
-            uint mintIndex = totalSupply();
+            uint mintIndex = totalSupply() + 1;
             _mint(msg.sender, mintIndex);
             _addTokenIndex(mintIndex);
         }
@@ -922,19 +920,90 @@ contract DutchAuction is Ownable, ERC721Metadata("Dutch Auction", "R2W3 Auction"
     fallback() external payable{}
 
     receive() external payable{}
-
-    //定义一个方法，发行ERC721代币，需要继承当前合约，并且实现该方法
-    function _baseURI() internal pure override returns (string memory){
-        return "";
-    }
 }
 ```
 
 ## 英式拍卖
 
-英式拍卖就是我们平时经常见到的拍卖形式。在拍卖期间，最高价者竞拍得到标的物品。英式拍卖通常对某单个标的物品进行拍卖。比如NFT发售等场景，一般不会采取这种方式。但是比如`1`编号的某个NFT可能会进行拍卖。那么便可以使用这种方式。
+英式拍卖就是我们平时经常见到的拍卖形式。在拍卖期间，最高价者竞拍得到标的物品。英式拍卖通常对某单个标的物品进行拍卖。比如NFT发售等场景，一般不会采取这种方式。但是比如`1`编号的某个NFT可能会进行拍卖。那么便可以使用这种方式。比如下面案例我们就实现了使用荷兰拍卖NFT藏品，但是针对特殊的No.1号藏品，我们采取的是项目方先mint之后，采取英式拍卖的方式来进行拍卖。整体业务逻辑较为复杂，需要涉及到多个账号。
 
 ![image-20221119120455203](README.assets/image-20221119120455203.png)
+
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.0;
+import "../erc721/Road2Web3.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+//采用英式拍卖拍卖NFT中的第1号藏品
+//设定拍卖时间为12h，由最高竞拍者获得
+//竞拍时需要将主币转移到合约中，如果目前出价最高，则拍下不允许撤销拍卖
+//如果有其他人出更高价格，那么当前竞拍者可以提取出代币，再次进行竞拍；或者直接放弃等等......
+contract EnglishAuction is Ownable{
+    
+    //要拍卖的是哪个NFT
+    Road2Web3 public nftAddress;
+    //NFT中的几号藏品
+    uint public tokenId;
+
+    //出售方，可以是个人，也可以是项目方，也就是拥有上述tokenId的账户
+    address public seller;
+
+    uint public auctionStartTime;
+
+    uint public constant AUCTION_DURATION_TIME = 5 minutes;
+
+    //最高报价
+    uint public highestBid;
+
+    //最高报价的出价人
+    address public highestBidder;
+
+    //不是最高竞价的竞拍者和竞拍价格的映射
+    mapping (address => uint) public withdraw;
+
+    constructor(uint _tokenId, address _nftAddress){
+        tokenId = _tokenId;
+        nftAddress = Road2Web3(_nftAddress);
+    }
+
+    //卖家授权挂牌拍卖
+    function listToSell() external{
+        require(nftAddress.ownerOf(tokenId) == msg.sender, "you don't the item");
+        seller = msg.sender;
+        //(bool result, ) = address(nftAddress).delegatecall(abi.encodeWithSignature("approve(address,uint256)", address(this), tokenId));
+        //nftAddress.approve(address(this), tokenId);
+        //require(result, "approve failed");
+    }
+
+    function setAuctionStartTime(uint _timestamp) external onlyOwner{
+        auctionStartTime = _timestamp;
+    }
+
+    function bid() external payable{
+        require(block.timestamp >= auctionStartTime, "auction has not started");
+        require((auctionStartTime + AUCTION_DURATION_TIME) > block.timestamp, "auction has ended");
+        require(msg.value > highestBid, "you must bid higger");
+        if(highestBid != 0){
+            //如果有新的竞拍者出了更高的价格，那么之前的竞拍者就不是最高出价了，它可以选择退出拍卖，拿回现金；或者继续追加
+            withdraw[highestBidder] += highestBid;
+        }
+        highestBid = msg.value;
+        highestBidder = msg.sender;
+    }
+    //竞拍失败的竞拍者可以随时取出竞拍金
+    function withdrawMoney() external {
+        uint balance = withdraw[msg.sender];
+        require(balance != 0, "you can not withdraw");
+        withdraw[msg.sender] = 0;
+        payable(msg.sender).transfer(balance);
+    }
+    //竞拍成功的竞拍者可以mint No.1 NFT
+    function claim() external{
+        require(msg.sender == highestBidder, "only highest bidder can mint");
+        nftAddress.safeTransferFrom(seller, highestBidder, tokenId);
+    }
+}
+```
 
 
 

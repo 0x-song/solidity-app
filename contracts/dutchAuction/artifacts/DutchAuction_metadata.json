@@ -187,6 +187,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "MAX_SUPPLY",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -303,6 +316,26 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "index",
+						"type": "uint256"
+					}
+				],
+				"name": "mint",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "mintGenesisNFT",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -558,7 +591,7 @@
 					"details": "Approves another address to transfer the given token ID The zero address indicates there is no approved address. There can only be one approved address per token at a given time. Can only be called by the token owner or an approved operator.",
 					"params": {
 						"_to": "address to be approved for the given token ID",
-						"_tokenId": "uint256 ID of the token to be approved 将tokenId授权给to地址；"
+						"_tokenId": "uint256 ID of the token to be approved 当前token的所有者将tokenId授权给to地址；"
 					}
 				},
 				"getApproved(uint256)": {
@@ -659,11 +692,11 @@
 			]
 		},
 		"dutchAuction/DutchAuction.sol": {
-			"keccak256": "0x5013e762fbb731498773ee73886c6edb5b722e56546363dfc906f066781194cf",
+			"keccak256": "0x8e02ff5101b840bba70b8f0f6507d079434c4dad1089ea924709dde3847609e9",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
-				"bzz-raw://edb032276a2f73b5c4c06cf717b3f1982293b9e5c117eb2728aba32cece0a63d",
-				"dweb:/ipfs/QmPBJ7ArfV59ZF5t2o2DbThCAutTeXv95518f3aTrjMHu2"
+				"bzz-raw://8b73bc8ff23138bc0e503e6d1fb6f56ec10614fee989c3007b3e368f12797449",
+				"dweb:/ipfs/QmNR32YYuKDwjxgL3GVkTpfUrS1RgbVc2ii8g5WJAN5tPD"
 			]
 		},
 		"erc721/Address.sol": {
@@ -683,19 +716,19 @@
 			]
 		},
 		"erc721/ERC721.sol": {
-			"keccak256": "0x0074c8265091ec4144dc3f956bf9968f40c984d0d6a8f33fafdb96917bb4881b",
+			"keccak256": "0x9a13e79b60c384b42c3db057ba180b37df2b38bd5edd0aece44ea9768eb8b525",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
-				"bzz-raw://3ba8c27f83e2e3fe51dfcd65be16b64ef5654dfd036dea766f1c57695426a45a",
-				"dweb:/ipfs/QmNbb8HNbMvLJzWjvbTx6RF3VvMjH3HMN734WAP79pTn1k"
+				"bzz-raw://f7d0899ae154d7771a324861b3329c894e01f772460b57281efee5d011770d13",
+				"dweb:/ipfs/QmXk54QG15QZdiRiPSa25aqaQ3JaxCgukmjzZA4sWaRNYY"
 			]
 		},
 		"erc721/ERC721Metadata.sol": {
-			"keccak256": "0xfd045db18f32a7ab010068aa370544439360ae6007cc14a55b9e9be33504aedd",
+			"keccak256": "0x1fbe19bd641e0122553c1d20d9f9a9d3fe1d95a31e123441242454616359cdec",
 			"license": "SEE LICENSE IN LICENSE",
 			"urls": [
-				"bzz-raw://89d15c209659eeebc540e194a49250d69a51f224405b9c2abc2cce349c6103c2",
-				"dweb:/ipfs/QmNwLuYpm6fVUmujTGgjeSHowa2KMudaRSTB8cvLyS97GP"
+				"bzz-raw://625340a1dc8e32c92c0630da04709f613a8426d013cfeb0c0c8fae26af5b4486",
+				"dweb:/ipfs/QmfHnqyGdDyYSz6PH7XaiK7vjeQrLo8DehkVH95gHWst55"
 			]
 		},
 		"erc721/IERC165.sol": {
@@ -736,6 +769,22 @@
 			"urls": [
 				"bzz-raw://e840f606f8ed6b5f4acff6c2a262f377ef9b77b072dbdefc009d2f6569295085",
 				"dweb:/ipfs/Qmc5ztNcZxKPicNy23rYufo7Vd3yAL5AQUNkRU8E8s2nTu"
+			]
+		},
+		"erc721/Road2Web3.sol": {
+			"keccak256": "0x76e52472df67e96eaf978951f4cbef5f3df17b06363cc472c996dd5b0842c22d",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://dae4b68421e31750a2b677297c1d7d06823fbf1c9b0554a21b6fa3bf4aa6b283",
+				"dweb:/ipfs/Qmb5SeRW34uLAuMMT4hsP3jxRKsDyNWx8dKj1eHEYNuPaq"
+			]
+		},
+		"erc721/SafeMath.sol": {
+			"keccak256": "0x7b8e55374e9531825f0574ae875a237f1b216dcfcdd44db1089b0cb8ae487386",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://fd6041295c94b13dccadc9ad2c3551406a94675c462dd2f8c8b1ab9d25f8478f",
+				"dweb:/ipfs/QmS14B7UL9QKGcofpawaeaXYpqmcVdshxpNiegFWBMHTWH"
 			]
 		},
 		"erc721/Strings.sol": {

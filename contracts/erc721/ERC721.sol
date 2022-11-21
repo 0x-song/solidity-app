@@ -136,7 +136,7 @@ contract ERC721 is ERC165, IERC721 {
    * Can only be called by the token owner or an approved operator.
    * @param _to address to be approved for the given token ID
    * @param _tokenId uint256 ID of the token to be approved
-   * 将tokenId授权给to地址；
+   * 当前token的所有者将tokenId授权给to地址；
    */
     function approve(address _to, uint256 _tokenId) external override{
         //获取当前tokenId的拥有者

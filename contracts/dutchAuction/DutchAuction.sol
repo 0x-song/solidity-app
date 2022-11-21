@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 import "../erc721/Road2Web3.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract DutchAuction is Ownable{
+contract DutchAuction is Ownable, Road2Web3("Road2Web3", "r2w3"){
     //NFT总数量
     uint256 public constant COLLECTION_SIZE = 1000;
     //竞拍开始价格
@@ -21,11 +21,15 @@ contract DutchAuction is Ownable{
 
     uint256 private baseTokenURI;
 
-    Road2Web3 private nftAddress;
-
-    constructor(address _nftAddress){
+    constructor(){
         auctionStartTime = block.timestamp;
-        nftAddress = Road2Web3(_nftAddress);
+    }
+
+    //只有合约的部署者才可以mint No.1号NFT，后续要进行拍卖
+    function mintGenesisNFT() external onlyOwner {
+        uint mintIndex = totalSupply() + 1;
+        _mint(msg.sender, mintIndex);
+        _addTokenIndex(mintIndex);
     }
 
     //项目方开始拍卖前需要调用该方法
@@ -54,12 +58,12 @@ contract DutchAuction is Ownable{
         //建立局部变量，减少gas费
         uint _startTime = auctionStartTime;
         require(_startTime != 0 && block.timestamp >= _startTime, "Sale have not been started");
-        require(nftAddress.totalSupply() + number <= COLLECTION_SIZE, "All items have benn minted");
+        require(totalSupply() + number <= COLLECTION_SIZE, "All items have benn minted");
         uint totalCost = getAuctionPrice() * number;
         require(msg.value >= totalCost, "Not enough ETH to mint");
         payable(msg.sender).transfer(msg.value - totalCost);
         for (uint i = 0; i < number; i++) {
-            uint mintIndex = nftAddress.totalSupply() + 2;
+            uint mintIndex = totalSupply() + 1;
             _mint(msg.sender, mintIndex);
             _addTokenIndex(mintIndex);
         }
@@ -76,8 +80,5 @@ contract DutchAuction is Ownable{
 
     receive() external payable{}
 
-    //定义一个方法，发行ERC721代币，需要继承当前合约，并且实现该方法
-    function _baseURI() internal pure override returns (string memory){
-        return "";
-    }
+
 }
