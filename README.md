@@ -1005,5 +1005,9 @@ contract EnglishAuction is Ownable{
 }
 ```
 
+## Merkle Tree
 
+`Merkle Tree`是区块链底层大量使用的一种技术。`Merkle Tree`最主要的功能是可以对大量的数据进行有效、安全、高效的验证。比如可以在区块链中对于交易来进行验证。在我们开发过程中，我们可以利用`Merkle Tree`来进行白名单验证等。比如`Aptos`发放空投等，验证某个地址是否在空投白名单中。还比如最近因为`FTX`暴雷而导致的`CEX`信任危机。`CEX`提出的资产证明方案。同时附上<a href='https://vitalik.ca/index.html'>Vitalik Buterin's website</a>
+
+![image-20221121231224697](README.assets/image-20221121231224697.png)
 
