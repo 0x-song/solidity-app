@@ -1011,4 +1011,8 @@ contract EnglishAuction is Ownable{
 
 ![image-20221121231224697](README.assets/image-20221121231224697.png)
 
-TODO:用五个账号计算一下Merkle Tree的值。验证一下github上面的图片是否对。
+![img](README.assets/K1X0b1i.png)
+
+上图是`Merkle Tree`的结构。相邻两个节点进行`hash`运算之后的`hash`值，再两两进行运算，最终会得到一个`ROOT hash`值。
+
+`Merkle Tree`可以允许对大型数据结构的内容进行有效以及安全的验证(`Merkle Proof`)。比如图中绿色标注的`Charlie`，如果想验证该节点是否在`Merkle Tree`中，那么它的`Merkle Proof`为`hash(David)`、`hash(L,R) 70ETH`、`hash(L,R) 1236ETH`。为什么呢？因为对`Charlie`和`David`进行`hash`值运算之后，会得到`hash(L2,R2) 174ETH`，而它与`hash(L,R) 70ETH`再次进行运算会得到`hash(L,R) 244ETH`。该值和最后`hash(L,R) 1236ETH`运算之后便会得到`ROOT hash`值。通过比对给定的`ROOT hash`值和计算得到的`ROOT hash`值比对，这样便可以确认该节点是否在`Merkle Tree`中了。
