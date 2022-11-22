@@ -1011,3 +1011,4 @@ contract EnglishAuction is Ownable{
 
 ![image-20221121231224697](README.assets/image-20221121231224697.png)
 
+TODO:用五个账号计算一下Merkle Tree的值。验证一下github上面的图片是否对。
