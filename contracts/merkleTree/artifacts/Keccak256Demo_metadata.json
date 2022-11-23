@@ -1,0 +1,83 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_b1",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes32",
+						"name": "_b2",
+						"type": "bytes32"
+					}
+				],
+				"name": "combineHash",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "singleHash",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"merkleTree/Keccak256Demo.sol": "Keccak256Demo"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"merkleTree/Keccak256Demo.sol": {
+			"keccak256": "0xd6c366a3a0df2b46dac4bec188e5597a7dbaf61c9da641110c4e5b326ef1cc7a",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://e3feef4a2a864a7b9b19ac74ba5c291b46991b5b42162f3d8af7763e6fce9aaa",
+				"dweb:/ipfs/QmRB8iR5mxByGj53TBmqaQkWzqURPFCgvSuFVrmL9vgy38"
+			]
+		}
+	},
+	"version": 1
+}

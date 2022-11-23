@@ -16,7 +16,7 @@ contract Road2Web3 is ERC721Metadata{
         return "ipfs://QmeDEvsWpBk429UJj9JTrgtHZpNJksvPVK4GfQv439UpXW/";
     }
 
-    function mint(uint index) external{
+    function mint(uint index) internal{
         require(index <= MAX_SUPPLY, "All items have been minted");
         _mint(msg.sender, index);
     }

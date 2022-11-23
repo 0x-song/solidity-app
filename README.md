@@ -1016,3 +1016,83 @@ contract EnglishAuction is Ownable{
 上图是`Merkle Tree`的结构。相邻两个节点进行`hash`运算之后的`hash`值，再两两进行运算，最终会得到一个`ROOT hash`值。
 
 `Merkle Tree`可以允许对大型数据结构的内容进行有效以及安全的验证(`Merkle Proof`)。比如图中绿色标注的`Charlie`，如果想验证该节点是否在`Merkle Tree`中，那么它的`Merkle Proof`为`hash(David)`、`hash(L,R) 70ETH`、`hash(L,R) 1236ETH`。为什么呢？因为对`Charlie`和`David`进行`hash`值运算之后，会得到`hash(L2,R2) 174ETH`，而它与`hash(L,R) 70ETH`再次进行运算会得到`hash(L,R) 244ETH`。该值和最后`hash(L,R) 1236ETH`运算之后便会得到`ROOT hash`值。通过比对给定的`ROOT hash`值和计算得到的`ROOT hash`值比对，这样便可以确认该节点是否在`Merkle Tree`中了。
+
+
+
+![image-20221123224432534](README.assets/image-20221123224432534.png)
+
+如上图所示，如果我希望验证蓝色标注的地址是否在白名单中，那么我们可以使用`Merkle Tree`来维护白名单。我们验证时`Proof`只需要绿色标注的部分即可。	
+
+**如何生成Merkle Tree，可以参考如下两个地址：**
+
+<a href='https://lab.miguelmota.com/merkletreejs/example/'>网页页面</a>
+
+<a href='https://github.com/merkletreejs/merkletreejs'>Github-MerkleTreeJS</a>
+
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.7;
+library MerkleTreeProof {
+    
+    /**
+     * 利用leaf节点和给定的proof，推算出一个root值，如果和给定的root值相等，则说明leaf在Merkle Tree中
+     */
+    function verify(bytes32[] calldata proof, bytes32 root, bytes32 leaf) public pure returns(bool){
+        return _proofProcedure(proof, leaf) == root;
+    }
+
+    function _proofProcedure(bytes32[] calldata _proof, bytes32 _leaf) internal pure returns(bytes32){
+        bytes32 computedHash = _leaf;
+        for (uint i = 0; i < _proof.length; i++) {
+            computedHash = _combineHash(computedHash, _proof[i]);
+        }
+        return computedHash;
+    }
+
+    /**
+     * 排序之后进行hash运算，保障无论顺序如何得到的hash值永远是相同的
+     */
+    function _combineHash(bytes32 _b1, bytes32 _b2) internal pure returns(bytes32){
+        return _b1 < _b2 ? keccak256(abi.encodePacked(_b1, _b2)) : keccak256(abi.encodePacked(_b2, _b1));
+    }
+}
+```
+
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.7;
+import "../erc721/Road2Web3.sol";
+import "./MerkleTreeProof.sol";
+/**
+ * 利用白名单来mint，如果用户很多，怎么验证某个用户是否在白名单中。挨个遍历太浪费gas。可以使用Merkle Proof
+ */
+contract WhiteList is Road2Web3("Road2Web3Dao", "r2w3"){
+    //记录Merkle Tree Root
+    bytes32 immutable public merkleRoot;
+    //是否已经mint过的地址
+    mapping (address => bool) public mintedAddress;
+
+    uint public tokenId;
+
+    constructor(bytes32 _merkleRoot){
+        merkleRoot = _merkleRoot;
+    }
+
+    function mint(bytes32[] calldata  _proof) external{
+        require(mintedAddress[msg.sender] == false, "current address already minted");
+        require(_verify(_leafHash(msg.sender), _proof), "invalid merkle proof");
+        tokenId ++;
+        mint(tokenId);
+    }
+
+    //这种方法也可以将address类型转换成了bytes类型
+    function _leafHash(address _account) internal pure returns (bytes32){
+        return keccak256(abi.encodePacked(_account));
+    }
+
+    function _verify(bytes32 _leaf, bytes32[] calldata _proof) internal view returns (bool){
+        return MerkleTreeProof.verify(_proof, merkleRoot, _leaf);
+    }   
+}
+```
+
