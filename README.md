@@ -1096,3 +1096,75 @@ contract WhiteList is Road2Web3("Road2Web3Dao", "r2w3"){
 }
 ```
 
+## 数字签名
+
+数字签名是一种证明你拥有私钥却无需暴露私钥的方式。如图所示便是`metamask`钱包进行签名的截图。
+
+<img src="README.assets/image-20221127210822034.png" alt="image-20221127210822034" style="zoom:50%;" />
+
+以太坊和比特币所使用的数字签名算法叫做双椭圆曲线数字签名算法(`ECDSA`)。基于双椭圆曲线私钥-公钥对来对数据进行签名。主要有三个作用：
+
+- 身份认证：证明签名方是私钥持有人
+- 不可否认：发送方不能否认发送过该数据
+- 完整性：消息在传输过程中无法被修改
+
+`ECDSA`流程如下：
+
+签名者利用**私钥**(隐私)来对**消息**(公开)创建**签名**(公开)
+
+其他人使用消息和签名恢复签名者的公钥并验证签名。
+
+### 创建签名
+
+**1.打包消息**：在以太坊的`ECDSA`标准中，被签名的消息是一组数据的`keccak256`哈希值，所以其类型为`bytes32`类型 。我们可以把任意想要签名的数据利用`abi.encodePacked()`进行打包，然后使用`keccak256`计算哈希值，用来作为消息。
+
+```solidity
+/**
+     * 在实际交互过程中，第二个参数地址可以直接获取，但是为了我们此处测试方便，直接进行赋值
+     */
+    function packedMessageHash(string memory _message, address _account) public pure returns (bytes32) {
+        bytes memory data = abi.encodePacked(_message, _account);
+        return keccak256(data);
+    }
+```
+
+**2.计算以太坊签名消息**：消息可以是能被执行的交易，也可以是简单的验证身份等。为了避免用户误签名了恶意交易信息，`EIP191`提倡在消息前加上`\x19Ethereum Signed Message:\n32`字符信息，并且在做一次`keccak256`哈希运算。作为以太坊签名消息。该消息不可以用于执行交易。
+
+```solidity
+/**
+     * https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sign
+     * https://eips.ethereum.org/EIPS/eip-191
+     */
+    function ethSignedHashMessage(bytes32 _hash) public pure returns (bytes32){
+        return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _hash));
+    }
+```
+
+**3.利用钱包来进行签名**：比如在上述案例中，我们就使用`metamask`在访问某个网站时进行签名验证。`metamask`的`personal_sign`方法会自动将消息转换成以太坊签名消息。所以我们使用`metamask`时无需主动调用该方法。
+
+只需要提供上述的`_message`和`_account`数据即可。需要特别注意的的地址需要和当前钱包的地址相同。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
