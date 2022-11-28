@@ -1,0 +1,115 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_hash",
+						"type": "bytes32"
+					}
+				],
+				"name": "ethSignedHashMessage",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "_message",
+						"type": "string"
+					}
+				],
+				"name": "packedMessageHash",
+				"outputs": [
+					{
+						"internalType": "bytes32",
+						"name": "",
+						"type": "bytes32"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "bytes32",
+						"name": "_msgHash",
+						"type": "bytes32"
+					},
+					{
+						"internalType": "bytes",
+						"name": "_signature",
+						"type": "bytes"
+					}
+				],
+				"name": "recoverSigner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "pure",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {
+				"ethSignedHashMessage(bytes32)": {
+					"notice": "https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sign https://eips.ethereum.org/EIPS/eip-191"
+				},
+				"packedMessageHash(string)": {
+					"notice": "在实际交互过程中，第二个参数地址可以直接获取，但是为了我们此处测试方便，直接进行赋值"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"ecdsa/ECDSASignature.sol": "ECDSASignature"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"ecdsa/ECDSASignature.sol": {
+			"keccak256": "0x11df3ed521b34a36da2e468322ef07a242cb43c0d0f191822b1b15299f5ed7de",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://53f98470cb054d70d73e717931a21220adbeadeaf954d8292f4040c5739a6315",
+				"dweb:/ipfs/Qmbp7eokcY9NKXNxP85JXtXgXaSpmaaiQeGZoR1oTtuAHd"
+			]
+		}
+	},
+	"version": 1
+}

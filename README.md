@@ -1144,19 +1144,101 @@ contract WhiteList is Road2Web3("Road2Web3Dao", "r2w3"){
 
 只需要提供上述的`_message`和`_account`数据即可。需要特别注意的的地址需要和当前钱包的地址相同。
 
+首先先对需要签名的消息进行哈希运算。
+
+```
+_message:Welcome to Road2Web3Dao.This Request will not cause any gas fees.
+_account:0xF8c3f049908D3E924845AB8b1CAEb10C96CE57fb
+```
+
+运算得到的哈希值为`0x48105d62aad2ebe1cc4deaf476195564b0f3d9ecdb460f8b787243e4bf526e70`
+
+![image-20221128212244625](README.assets/image-20221128212244625.png)
+
+然后在`Chrome开发者工具-Console`中依次输入如下指令(但是得保证`metamask`钱包处于连接状态)：
+
+```
+account = "0xF8c3f049908D3E924845AB8b1CAEb10C96CE57fb"
+hash = "0x48105d62aad2ebe1cc4deaf476195564b0f3d9ecdb460f8b787243e4bf526e70"
+ethereum.request({method: "personal_sign", params: [account, hash]})
+
+0x2b61e7b5d090985a5522cd78b1925f5d8386ec2b5d6ab425dd068f60496f40cf2fa0a35030ecd1eae79af553fbaf70864adabb25def1b50d6596feeacb48c5361c
+```
+
+![image-20221128223259007](README.assets/image-20221128223259007.png)
 
 
 
+下面这种方式也是ok的。上面的消息是`bytes32`，下面的消息是字符。
+
+```
+account = "0xF8c3f049908D3E924845AB8b1CAEb10C96CE57fb"
+message = "Welcome to Road2Web3Dao.This Request will not cause any gas fees. wallet address is 0xF8c3f049908D3E924845AB8b1CAEb10C96CE57fb"
+ethereum.request({method: "personal_sign", params: [account, message]})
+
+0x75901ebbc431338941d59a88a09c8667a61ef7a2cdd2f1ad5133ebf2dfae0aec6c3315ebb6d657e4f0e02787b758385a4310b3fdc786dbcd21111759ba939e441c
+```
+
+![image-20221128213804566](README.assets/image-20221128213804566.png)
 
 
 
+**4.通过签名和消息来恢复公钥**：`签名`是由数学算法生成的。这里我们使用的是`rsv签名`，`签名`中包含`r, s, v`三个值的信息。而后，我们可以通过`r, s, v`及`以太坊签名消息`来求得`公钥`。下面的`recoverSigner()`函数实现了上述步骤，它利用`以太坊签名消息 _msgHash`和`签名 _signature`恢复`公钥`
+
+**但是最终上述两种方式，第一种方式可以正常恢复公钥，第二种方式暂时无法恢复公钥。不清楚metamask在处理字符消息时做了何种处理。**
+
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.7;
+contract ECDSASignature {
+    
+    /**
+     * 在实际交互过程中，第二个参数地址可以直接获取，但是为了我们此处测试方便，直接进行赋值
+     */
+    function packedMessageHash(string memory _message, address _account) public pure returns (bytes32) {
+        bytes memory data = abi.encodePacked(_message, _account);
+        return keccak256(data);
+    }
 
 
+    /**
+     * https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_sign
+     * https://eips.ethereum.org/EIPS/eip-191
+     */
+    function ethSignedHashMessage(bytes32 _hash) public pure returns (bytes32){
+        return keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", _hash));
+    }
 
 
+        // @dev 从_msgHash和签名_signature中恢复signer地址
+    function recoverSigner(bytes32 _msgHash, bytes memory _signature) public pure returns (address){
+        // 检查签名长度，65是标准r,s,v签名的长度
+        require(_signature.length == 65, "invalid signature length");
+        bytes32 r;
+        bytes32 s;
+        uint8 v;
+        // 目前只能用assembly (内联汇编)来从签名中获得r,s,v的值
+        assembly {
+            /*
+            前32 bytes存储签名的长度 (动态数组存储规则)
+            add(sig, 32) = sig的指针 + 32
+            等效为略过signature的前32 bytes
+            mload(p) 载入从内存地址p起始的接下来32 bytes数据
+            */
+            // 读取长度数据后的32 bytes
+            r := mload(add(_signature, 0x20))
+            // 读取之后的32 bytes
+            s := mload(add(_signature, 0x40))
+            // 读取最后一个byte
+            v := byte(0, mload(add(_signature, 0x60)))
+        }
+        // 使用ecrecover(全局函数)：利用 msgHash 和 r,s,v 恢复 signer 地址
+        return ecrecover(_msgHash, v, r, s);
+    }
+}
+```
 
-
-
+针对上述问题，后续打算针对`packedMessageHash`函数做一些修改。如果此时传递的是单个参数，看能否签名验证通过。
 
 
 
