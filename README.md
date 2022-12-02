@@ -1181,7 +1181,7 @@ ethereum.request({method: "personal_sign", params: [account, message]})
 
 ![image-20221128213804566](README.assets/image-20221128213804566.png)
 
-
+### 验证签名
 
 **4.通过签名和消息来恢复公钥**：`签名`是由数学算法生成的。这里我们使用的是`rsv签名`，`签名`中包含`r, s, v`三个值的信息。而后，我们可以通过`r, s, v`及`以太坊签名消息`来求得`公钥`。下面的`recoverSigner()`函数实现了上述步骤，它利用`以太坊签名消息 _msgHash`和`签名 _signature`恢复`公钥`
 
