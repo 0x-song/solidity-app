@@ -1301,11 +1301,111 @@ contract ECDSASignature2 {
 
 
 
+## NFT交易所
 
+```solidity
+// SPDX-License-Identifier: SEE LICENSE IN LICENSE
+pragma solidity ^0.8.7;
+import "../erc721/IERC721Receiver.sol";
+import "../erc721/IERC721.sol";
+contract NFTSwap is IERC721Receiver{
 
+    fallback() external payable{}
+    //需要接收eth主币
+    receive() external payable{}
 
+    //NFTSwap需要中转接收用户挂单发送过来的NFT，所以需要实现IERC721Receiver，否则无法接收
+    function onERC721Received(address operator, address from,uint tokenId,bytes calldata data) external override returns (bytes4){
+        return IERC721Receiver.onERC721Received.selector;
+    }
 
+    constructor() {
+        
+    }
 
+    event List(address indexed seller, address indexed nftAddr, uint256 indexed tokenId, uint256 price);
 
+    event Buy(address indexed buyer, address indexed nftAddr, uint256 indexed tokenId, uint256 price);
 
+    event Revoke(address indexed seller, address indexed nftAddr, uint256 indexed tokenId);
+
+    event Update(address indexed seller, address indexed nftAddr, uint256 indexed tokenId, uint256 newPrice);
+
+    struct Order{
+        address owner;
+        uint price;
+    }
+
+    //NFT合约地址以及对应的tokenId和订单的映射关系
+    mapping (address => mapping (uint256 => Order)) nftList;
+
+    /**
+     * 卖家挂单上架nft,将指定的NFT发送到当前合约中来
+     */
+    function list(address _nftAddr, uint256 _tokenId, uint256  _price) public{
+        IERC721 _nft = IERC721(_nftAddr);
+        require(_nft.getApproved(_tokenId) == address(this), "approve contract first");
+        require(_price > 0);
+        Order storage _order = nftList[_nftAddr][_tokenId];
+        _order.owner = msg.sender;
+        _order.price = _price;
+        _nft.safeTransferFrom(msg.sender, address(this), _tokenId);
+        emit List(msg.sender, _nftAddr, _tokenId, _price);
+    }
+
+    /**
+     * 撤销挂单
+     */
+    function revoke(address _nftAddr, uint256 _tokenId) public{
+        Order storage _order = nftList[_nftAddr][_tokenId];
+        require(msg.sender == _order.owner, "You are not the owner.You do not have permission");
+        IERC721 _nft = IERC721(_nftAddr);
+        require(_nft.ownerOf(_tokenId) == address(this), "wrong arguments");
+        _nft.safeTransferFrom(address(this), msg.sender, _tokenId);
+        delete nftList[_nftAddr][_tokenId];
+        emit Revoke(msg.sender, _nftAddr, _tokenId);
+    }
+
+    function update(address _nftAddr, uint256 _tokenId, uint256 _newPrice) public{
+        require(_newPrice > 0, "invalid price");
+        Order storage _order = nftList[_nftAddr][_tokenId];
+        require(_order.owner == msg.sender, "you do not have permission");
+        IERC721 _nft = IERC721(_nftAddr);
+        require(_nft.ownerOf(_tokenId) ==  address(this), "wrong parameter");
+        _order.price = _newPrice;
+        emit Update(msg.sender, _nftAddr, _tokenId, _newPrice);
+    }
+
+    function buy(address _nftAddr, uint256  _tokenId) public payable{
+        Order storage _order = nftList[_nftAddr][_tokenId];
+        require(_order.price > 0, "invalid price");
+        require(msg.value >= _order.price, "insufficient price");
+        IERC721 _nft = IERC721(_nftAddr);
+        require(_nft.ownerOf(_tokenId) == address(this), "wrong parameter");
+        _nft.safeTransferFrom(address(this), msg.sender, _tokenId);
+        payable(msg.sender).transfer(msg.value - _order.price);
+        payable(_order.owner).transfer(_order.price);
+        delete nftList[_nftAddr][_tokenId];
+        emit Buy(msg.sender, _nftAddr, _tokenId, _order.price);
+    }
+}
+```
+
+##  链上随机数
+
+方式一是利用一些链上成员变量作为参数，利用`keccak256`函数来获取伪随机数。很多项目也的确使用该种方法来生成随机数。但是这些项目也无一例外的全部被攻击了。攻击者可以铸造他们想要的`NFT`，而不是随机获取。
+
+```solidity
+uint index = uint(keccak256(abi.encodePacked(nonce, msg.sender, block.difficulty, block.timestamp))) % totalSize;
+```
+
+https://forum.openzeppelin.com/t/understanding-the-meebits-exploit/8281/2
+
+**方式二使用链下生成随机数**，然后通过预言机把随机数上传到链上。`ChainLink`提供`VRF`（可验证随机函数）服务。开发者可以通过支付`LINK`代币来获取随机数。
+
+![Chainlnk VRF](README.assets/39-1-8ce51bfb6a4ef7e77b54af56022d402b.png)
+
+<a href='https://docs.chain.link/getting-started/intermediates-tutorial'>Random Numbers: Using Chainlink VRF</a>
+
+> Randomness is very difficult to generate on blockchains. This is because every node on the blockchain must come to the same conclusion and form a consensus. Even though random numbers are versatile and useful in a variety of blockchain applications, they cannot be generated natively in smart contracts. The solution to this issue is [**Chainlink VRF**](https://docs.chain.link/vrf/v2/introduction/), also known as Chainlink Verifiable Random Function.
 
