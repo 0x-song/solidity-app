@@ -29,7 +29,7 @@ interface IERC1155Receiver is IERC165 {
         address from,
         uint256 id,
         uint256 value,
-        bytes calldata data
+        bytes memory data
     ) external returns (bytes4);
 
     /**
@@ -51,8 +51,8 @@ interface IERC1155Receiver is IERC165 {
     function onERC1155BatchReceived(
         address operator,
         address from,
-        uint256[] calldata ids,
-        uint256[] calldata values,
-        bytes calldata data
+        uint256[] memory ids,
+        uint256[] memory values,
+        bytes memory data
     ) external returns (bytes4);
 }
