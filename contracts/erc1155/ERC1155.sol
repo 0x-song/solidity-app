@@ -135,5 +135,33 @@ contract ERC1155 is IERC165, IERC1155, IERC1155MetadataURI{
      * acceptance magic value.
      * 多币种批量安全转账。触发TransferBatch事件。
      */
-    function safeBatchTransferFrom(address from, address to, uint256[] calldata ids, uint256[] calldata amounts, bytes calldata data) override external{}
+    function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _amounts, bytes memory _data) override public{
+        address operator = msg.sender;
+        require(_from == operator || isApprovedForAll(_from, operator), "ERC1155: caller is not token owner nor approved");
+        require(_ids.length == _amounts.length, "ERC1155: ids and amounts length mismatch");
+        require(_to != address(0), "ERC1155: can not transfer to the zero address");
+        //安全检查
+        _safeBatchTransferCheck(operator, _from, _to, _ids, _amounts, _data);
+        for (uint i = 0; i < _ids.length; i++) {
+            uint256 id = _ids[i];
+            uint256 amount = _amounts[i];
+            uint256 fromBalance = balances[id][_from];
+            require(fromBalance >= amount, "ERC1155: insufficient balance for transfer");
+            balances[id][_from] = fromBalance - amount;
+            balances[id][_to] += amount;
+        }
+        emit TransferBatch(operator, _from, _to, _ids, _amounts);
+    }
+
+    function _safeBatchTransferCheck(address _operator, address _from, address _to, uint256[] memory _ids, uint256[] memory _amounts, bytes memory _data) private{
+        if(_to.isContract()){
+           try IERC1155Receiver(_to).onERC1155BatchReceived(_operator, _from, _ids, _amounts, _data) returns (bytes4 result) {
+            if(result != IERC1155Receiver.onERC1155BatchReceived.selector){
+                revert("ERC1155: ERC1155Receiver rejected tokens");
+            }
+           } catch  {
+                revert("ERC1155: transfer to non-ERC1155Receiver implementer contract");
+           }
+        }
+    }
 }
