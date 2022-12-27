@@ -5,10 +5,13 @@ import "./IERC1155Receiver.sol";
 import "./extensions/IERC1155MetadataURI.sol";
 import "../erc721/IERC165.sol";
 import "../erc721/Address.sol";
+import "../erc721/Strings.sol";
 
 contract ERC1155 is IERC165, IERC1155, IERC1155MetadataURI{
 
     using Address for address;
+
+    using Strings for uint256;
 
     //代币种类id到账户account以及余额之间的映射关系
     mapping (uint256 => mapping (address => uint)) balances;
@@ -22,8 +25,14 @@ contract ERC1155 is IERC165, IERC1155, IERC1155MetadataURI{
     }
 
     //实现Metadata接口
-    function uri(uint256 id) external view override returns (string memory){
+    //bytes和string之间的相互转换    bytes(string)    string(bytes)
+    function uri(uint256 id) public view virtual override returns (string memory){
+        string memory baseURI = _baseURI();
+        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, id.toString())) : "";
+    }
 
+    function _baseURI() internal view virtual returns (string memory){
+        return "";
     }
 
     /**
@@ -159,9 +168,52 @@ contract ERC1155 is IERC165, IERC1155, IERC1155MetadataURI{
             if(result != IERC1155Receiver.onERC1155BatchReceived.selector){
                 revert("ERC1155: ERC1155Receiver rejected tokens");
             }
-           } catch  {
+           } catch {
                 revert("ERC1155: transfer to non-ERC1155Receiver implementer contract");
            }
         }
     }
+
+    function _mint(address _to, uint256 _id, uint256 _amount, bytes memory _data) internal virtual{
+        require(_to != address(0), "ERC1155: can not mint to zero address");
+        address operator = msg.sender;
+        _safeTransferCheck(operator, address(0), _to, _id, _amount, _data);
+        balances[_id][_to] += _amount;
+        emit TransferSingle(operator, address(0), _to, _id, _amount);
+    }
+
+    function _mintBatch(address _to, uint256[] memory _ids, uint256[] memory _amounts, bytes memory _data) internal virtual{
+        require(_to != address(0), "ERC1155: can not mint to zero address");
+        require(_ids.length == _amounts.length, "ERC1155: ids and amounts length mismatch");
+        address operator = msg.sender;
+        _safeBatchTransferCheck(operator, address(0), _to, _ids, _amounts, _data);
+        for (uint i = 0; i < _ids.length; i++) {
+            balances[_ids[i]][_to] += _amounts[i];
+        }
+        emit TransferBatch(operator, address(0), _to, _ids, _amounts);
+    }
+
+    function _burn(address _from, uint256 _id, uint256 _amount) internal virtual{
+        require(_from != address(0), "ERC1155:can not burn from zero address");
+        address operator = msg.sender;
+        uint256 fromBalance = balances[_id][_from];
+        require(fromBalance >= _amount, "ERC1155:burn amount exceeds balance");
+        balances[_id][_from] = fromBalance - _amount;
+        emit TransferSingle(operator, _from, address(0), _id, _amount);
+    }
+
+    function _burnBatch(address _from, uint256[] memory _ids, uint256[] memory _amounts) internal virtual{
+        require(_from != address(0), "ERC1155:can not burn from zero address");
+        require(_ids.length == _amounts.length, "ERC1155: ids and amounts length mismatch");
+        address operator = msg.sender;
+        for (uint i = 0; i < _ids.length; i++) {
+            uint256 id = _ids[i];
+            uint256 amount = _amounts[i];
+            uint256 fromBalance = balances[id][_from];
+            require(fromBalance >= amount, "ERC1155:batch burn amount exceeds balance");
+            balances[id][_from] = fromBalance - amount;
+        }
+        emit TransferBatch(operator, _from, address(0), _ids, _amounts);
+    }
+
 }
