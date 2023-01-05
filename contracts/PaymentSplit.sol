@@ -5,12 +5,12 @@ contract PaymentSplit {
     /**
      * 增加受益人
      */
-    event AddBeneficiary(address indexed beneficiary, uint indexed shares);
+    event AddBeneficiary(address indexed beneficiary, uint shares);
 
     /**
      * 受益人取款
      */
-    event WithdrawShares(address indexed beneficiary, uint indexed amount);
+    event WithdrawShares(address indexed beneficiary, uint amount);
 
     /**
      * 合约收款
