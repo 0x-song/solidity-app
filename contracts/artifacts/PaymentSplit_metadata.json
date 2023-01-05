@@ -1,0 +1,268 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address[]",
+						"name": "_beneficiarys",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "_personShares",
+						"type": "uint256[]"
+					}
+				],
+				"stateMutability": "payable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "beneficiary",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "shares",
+						"type": "uint256"
+					}
+				],
+				"name": "AddBeneficiary",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "from",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "ReceiveShares",
+				"type": "event"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "beneficiary",
+						"type": "address"
+					},
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "WithdrawShares",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "beneficiarys",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "personShares",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalShares",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalWithdraw",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address payable",
+						"name": "_account",
+						"type": "address"
+					}
+				],
+				"name": "withdrawShare",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_account",
+						"type": "address"
+					}
+				],
+				"name": "withdrawable",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "withdrawed",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"stateMutability": "payable",
+				"type": "receive"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"events": {
+				"AddBeneficiary(address,uint256)": {
+					"notice": "增加受益人"
+				},
+				"ReceiveShares(address,uint256)": {
+					"notice": "合约收款"
+				},
+				"WithdrawShares(address,uint256)": {
+					"notice": "受益人取款"
+				}
+			},
+			"kind": "user",
+			"methods": {
+				"constructor": {
+					"notice": "初始化两个数组；一个是受益人数组：有哪些受益人；一个是受益人分别占有多少份额；顺序保持一致"
+				},
+				"personShares(address)": {
+					"notice": "每个受益人的份额"
+				},
+				"totalShares()": {
+					"notice": "总份额"
+				},
+				"totalWithdraw()": {
+					"notice": "已支付的份额"
+				},
+				"withdrawable(address)": {
+					"notice": "每个账户可以领取的ETH主币"
+				},
+				"withdrawed(address)": {
+					"notice": "每个受益人取出的金额"
+				}
+			},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"PaymentSplit.sol": "PaymentSplit"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"PaymentSplit.sol": {
+			"keccak256": "0x53c05c8d210dec78434194525a30c30d8779e296c7c8578257241be272543cbb",
+			"license": "SEE LICENSE IN LICENSE",
+			"urls": [
+				"bzz-raw://1d2932ebab35532519527022cac30cbb5c0634c9a75b53dd01ada5d5b3a77182",
+				"dweb:/ipfs/QmZZQnpLaGMqk2F4rqo2xE6ckmCK3h7PRdTFkbvGWGwUef"
+			]
+		}
+	},
+	"version": 1
+}

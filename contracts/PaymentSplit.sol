@@ -17,9 +17,14 @@ contract PaymentSplit {
      */
     event ReceiveShares(address indexed from, uint indexed amount);
 
-
+    /**
+     * 总份额
+     */
     uint256 public totalShares;
 
+    /**
+     * 已支付的份额
+     */
     uint256 public totalWithdraw;
 
     /**
@@ -61,6 +66,25 @@ contract PaymentSplit {
         personShares[_account] = _accountShare;
         totalShares += _accountShare;
         emit AddBeneficiary(_account, _accountShare);
+    }
+
+    function withdrawShare(address payable _account) public{
+        require(personShares[_account] > 0, "account has no share");
+        uint256 payment = withdrawable(_account);
+        require(payment > 0, "account have no share");
+        totalWithdraw += payment;
+        withdrawed[_account] += payment;
+        _account.transfer(payment);
+        emit WithdrawShares(_account, payment);
+    }
+
+    /**
+     * 每个账户可以领取的ETH主币
+     */
+    function withdrawable(address _account) public view returns (uint256){
+        uint256 totalReceived = address(this).balance + totalWithdraw;
+        uint256 payment = totalReceived * personShares[_account] / totalShares - withdrawed[_account];
+        return payment;
     }
 
 }
